@@ -14,19 +14,13 @@
     </style>
 </head>
 <body>
-    <?php
-        $nom = "Memorias del subsuelo";
-        $llegit = true;
-
-        if ($llegit) {
-            $missatge = "Tú m'has llegit";
-        }else{
-            $missatge = "Tú no m'has llegit";
-        }
-    ?>
-    <h1><?php echo $missatge; ?>
-        <?=$missatge?>
-    </h1>
+    <?php $llibres = [
+            "Memorias del subsuelo de Fyódor Dostoevsky",
+            "El extranjero de Albert Camus",
+            "Metamorfosis de Franz Kafka",
+            "Crimen y castigo de Fyódor Dostoevsky",
+            "La peste de Albert Camus"
+    ]?>
 
 </body>
 </html>
