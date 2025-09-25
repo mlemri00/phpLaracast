@@ -22,5 +22,11 @@
             "La peste de Albert Camus"
     ]?>
 
+    <ul>
+        <?php foreach($llibres as $llibre){
+            echo "<li>$llibre</li>";
+        }?>
+    </ul>
+
 </body>
 </html>
