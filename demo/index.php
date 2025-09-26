@@ -14,16 +14,22 @@
     </style>
 </head>
 <body>
-    <?php $llibres = [
-            "Memorias del subsuelo de Fyódor Dostoevsky",
-            "El extranjero de Albert Camus",
-            "Metamorfosis de Franz Kafka",
-            "Crimen y castigo de Fyódor Dostoevsky",
-            "La peste de Albert Camus"
-    ]?>
+    <?php $llibres =[
+        [
+                "nom"=>"Noches blancas",
+                "autor"=>"Dostoevsky"
+        ],
+        [
+                "nom"=>"El extranjero",
+                "autor"=>"Albert Camus"
+        ]
+    ]
+    ?>
 
     <ul>
-     <?= $llibres[1]?>
+     <?php foreach($llibres as $llibre): ?>
+     <li><?=$llibre["nom"]?></li>
+        <?php endforeach; ?>
     </ul>
 
 </body>
