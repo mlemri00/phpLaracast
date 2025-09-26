@@ -17,18 +17,26 @@
     <?php $llibres =[
         [
                 "nom"=>"Noches blancas",
-                "autor"=>"Dostoevsky"
+                "autor"=>"Dostoevsky",
+                "any"=>1848,
+                "urlCompra"=>"https://lacasadellibro.com"
         ],
         [
                 "nom"=>"El extranjero",
-                "autor"=>"Albert Camus"
+                "autor"=>"Albert Camus",
+                "any"=>1948,
+                "urlCompra"=>"https://lacasadellibro.com"
         ]
     ]
     ?>
 
     <ul>
      <?php foreach($llibres as $llibre): ?>
-     <li><?=$llibre["nom"]?></li>
+     <li>
+         <a href="<?=$llibre["urlCompra"]?>">
+            <?=$llibre["nom"];?>(<?= $llibre["any"]?>)
+         </a>
+     </li>
         <?php endforeach; ?>
     </ul>
 
