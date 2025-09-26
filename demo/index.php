@@ -36,7 +36,7 @@
             ]
     ];
 
-    function filtrarPerAutor($llibres){
+    $llibresFiltrats = function($llibres){
         $llibresFiltrats = [];
 
         foreach($llibres as $llibre){
@@ -46,12 +46,14 @@
         }
 
         return $llibresFiltrats;
-    }
+    };
+
+    $llibresFiltrats = $llibresFiltrats($llibres);
 
     ?>
 
     <ul>
-     <?php foreach(filtrarPerAutor($llibres) as $llibre): ?>
+     <?php foreach($llibresFiltrats as $llibre): ?>
 
      <li>
          <a href="<?=$llibre["urlCompra"]?>">
@@ -62,7 +64,7 @@
         <?php endforeach; ?>
     </ul>
     <p>
-        <?= filtrarPerAutor(); ?>
+
     </p>
 
 </body>
