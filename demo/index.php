@@ -36,19 +36,19 @@
             ]
     ];
 
-    $llibresFiltrats = function($llibres){
-        $llibresFiltrats = [];
+    $llibresFiltrats = function($items, $key, $value){
+        $itemsFiltrats = [];
 
-        foreach($llibres as $llibre){
-            if($llibre["autor"] === "Albert Camus"){
-                $llibresFiltrats[] = $llibre;
+        foreach($items as $item){
+            if($item[$key] === $value){
+                $itemsFiltrats[] = $item;
             }
         }
 
-        return $llibresFiltrats;
+        return $itemsFiltrats;
     };
 
-    $llibresFiltrats = $llibresFiltrats($llibres);
+    $llibresFiltrats = $llibresFiltrats($llibres,"autor","Dostoevsky");
 
     ?>
 
