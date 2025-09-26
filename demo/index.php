@@ -34,20 +34,36 @@
                     "any"=>1938,
                     "urlCompra"=>"https://lacasadellibro.com"
             ]
-    ]
+    ];
+
+    function filtrarPerAutor($llibres){
+        $llibresFiltrats = [];
+
+        foreach($llibres as $llibre){
+            if($llibre["autor"] === "Albert Camus"){
+                $llibresFiltrats[] = $llibre;
+            }
+        }
+
+        return $llibresFiltrats;
+    }
+
     ?>
 
     <ul>
-     <?php foreach($llibres as $llibre): ?>
-     <?php if($llibre["autor"] === "Albert Camus" ):?>
+     <?php foreach(filtrarPerAutor($llibres) as $llibre): ?>
+
      <li>
          <a href="<?=$llibre["urlCompra"]?>">
             <?=$llibre["nom"];?>(<?= $llibre["any"]?>)
          </a>
      </li>
-         <?php endif; ?>
+
         <?php endforeach; ?>
     </ul>
+    <p>
+        <?= filtrarPerAutor(); ?>
+    </p>
 
 </body>
 </html>
