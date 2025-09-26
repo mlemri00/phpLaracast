@@ -26,17 +26,26 @@
                 "autor"=>"Albert Camus",
                 "any"=>1948,
                 "urlCompra"=>"https://lacasadellibro.com"
-        ]
+        ],
+
+            [
+                    "nom"=>"La peste",
+                    "autor"=>"Albert Camus",
+                    "any"=>1938,
+                    "urlCompra"=>"https://lacasadellibro.com"
+            ]
     ]
     ?>
 
     <ul>
      <?php foreach($llibres as $llibre): ?>
+     <?php if($llibre["autor"] === "Albert Camus" ):?>
      <li>
          <a href="<?=$llibre["urlCompra"]?>">
             <?=$llibre["nom"];?>(<?= $llibre["any"]?>)
          </a>
      </li>
+         <?php endif; ?>
         <?php endforeach; ?>
     </ul>
 
