@@ -23,9 +23,7 @@
     ]?>
 
     <ul>
-        <?php foreach($llibres as $llibre) :?>
-        <li><?=$llibre?></li>
-        <?php endforeach?>
+     <?= $llibres[1]?>
     </ul>
 
 </body>
