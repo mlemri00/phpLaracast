@@ -1,20 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        body{
-            display:grid;
-            place-items:center;
-            height: 100vh;
-            margin:0;
-            font-family: sans-serif;
-        }
-    </style>
-</head>
-<body>
-    <?php $llibres =[
+<?php
+$llibres =[
         [
                 "nom"=>"Noches blancas",
                 "autor"=>"Dostoevsky",
@@ -49,24 +34,7 @@
     };
 
     $llibresFiltrats = filter($llibres,function($llibre){
-        return $llibre["any"] >= 1830;
+        return $llibre["autor"] === "Albert Camus";
     });
 
-    ?>
-
-    <ul>
-     <?php foreach($llibresFiltrats as $llibre): ?>
-     <li>
-         <a href="<?=$llibre["urlCompra"]?>">
-            <?=$llibre["nom"];?>(<?= $llibre["any"]?>)
-         </a>
-     </li>
-
-        <?php endforeach; ?>
-    </ul>
-    <p>
-
-    </p>
-
-</body>
-</html>
+require "index.view.php";
