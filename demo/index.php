@@ -36,11 +36,11 @@
             ]
     ];
 
-    $llibresFiltrats = function($items, $key, $value){
+    function filter($items, $fn){
         $itemsFiltrats = [];
 
         foreach($items as $item){
-            if($item[$key] === $value){
+            if($fn($item)){
                 $itemsFiltrats[] = $item;
             }
         }
@@ -48,13 +48,14 @@
         return $itemsFiltrats;
     };
 
-    $llibresFiltrats = $llibresFiltrats($llibres,"autor","Dostoevsky");
+    $llibresFiltrats = filter($llibres,function($llibre){
+        return $llibre["any"] >= 1830;
+    });
 
     ?>
 
     <ul>
      <?php foreach($llibresFiltrats as $llibre): ?>
-
      <li>
          <a href="<?=$llibre["urlCompra"]?>">
             <?=$llibre["nom"];?>(<?= $llibre["any"]?>)
