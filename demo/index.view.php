@@ -15,22 +15,12 @@
     </style>
 </head>
 <body>
+    <ul>
+        <?php foreach($negoci["categories"] as $categoria) : ?>
+        <li>  <?= $categoria;?> </li>
+        <?php endforeach;?>
+    </ul>
 
-?>
-
-<ul>
-    <?php foreach($llibresFiltrats as $llibre): ?>
-        <li>
-            <a href="<?=$llibre["urlCompra"]?>">
-                <?=$llibre["nom"];?>(<?= $llibre["any"]?>)
-            </a>
-        </li>
-
-    <?php endforeach; ?>
-</ul>
-<p>
-
-</p>
 
 </body>
 </html>
