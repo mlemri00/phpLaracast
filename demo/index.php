@@ -10,4 +10,4 @@ $negoci = [
 function registrar($usuari){
 
 };
-require "index.view.php";
+require "views/index.view.php";
