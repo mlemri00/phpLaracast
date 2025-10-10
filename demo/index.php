@@ -1,10 +1,13 @@
 <?php
 
-$heading="Home";
-require ('functions.php');
+require ("functions.php");
 
+$uri = $_SERVER['REQUEST_URI'];
 
-
-
-
-require "views/index.view.php";
+if ($uri === '/'){
+    require 'controllers/index.php';
+}else if ($uri === '/about'){
+    require 'controllers/about.php';
+}else if ($uri === '/contact'){
+    require 'controllers/contact.php';
+}
