@@ -10,5 +10,4 @@ $negoci = [
 function registrar($usuari){
 
 };
-
 require "index.view.php";
