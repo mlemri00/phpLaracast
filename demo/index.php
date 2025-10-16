@@ -8,8 +8,11 @@ $config=require ('config.php');
 
 $db=new Database($config);
 
+$id = $_GET['id'];
 
-$posts=$db->query("select * from posts")->fetch() ;
+$query = "select * from posts where id = ?";
+
+$posts=$db->query($query, [$id])->fetch() ;
 
 
 
