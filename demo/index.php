@@ -1,19 +1,14 @@
 <?php
 
-// require ("router.php");
-require ("functions.php");
+require ("router.php");
 require ("Database.php");
 
 $config=require ('config.php');
 
-$db=new Database($config);
+$db=new Database($config['']);
 
-$id = $_GET['id'];
 
-$query = "select * from posts where id = ?";
-
-$posts=$db->query($query, [$id])->fetch() ;
+//$query = "select * from users where id = ?";
 
 
 
-dd($posts['title']);
