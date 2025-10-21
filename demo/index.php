@@ -3,12 +3,9 @@
 require ("router.php");
 require ("Database.php");
 
-$config=require ('config.php');
-
-$db=new Database($config['']);
 
 
-//$query = "select * from users where id = ?";
+
 
 
 

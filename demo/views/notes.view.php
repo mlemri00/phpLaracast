@@ -5,8 +5,9 @@
     <main>
         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
             <!-- Your content -->
-
-            <p class="text-white"></p>
+        <?php foreach ($notes as $note): ?>
+        <li><?= $note['body']?></li>
+    <?php endforeach;?>
         </div>
     </main>
 <?= require ('partials/footer.php')?>
