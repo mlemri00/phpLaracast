@@ -5,16 +5,11 @@ $dba = new Database($config);
 $heading = "Note";
 $note = $dba->query('select * from notes where id = :id',[
     'id'=>$_GET['id']
-])->find() ;
+])->findOrFail() ;
 
-if (! $note){
-    abort();
-}
 $currentUserId = 1;
+authorize($note['user_id']==$currentUserId);
 
-if ($note['user_id']!=$currentUserId){
-    abort(Response::FORBIDDEN);
-}
 
 
 require "views/note.view.php";
