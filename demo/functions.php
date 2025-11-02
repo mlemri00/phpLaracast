@@ -17,3 +17,12 @@ function authorize($condition,$status=Response::FORBIDDEN){
         abort($status);
     }
 }
+
+function base_path($path){
+    return BASE_PATH . $path;
+}
+
+function view($path,$attributes = []){
+    extract($attributes);//extract ens extreu cada objecte de l'array a una variable
+    require base_path('views/' . $path);//Cridam a l'arxiu desde function
+}

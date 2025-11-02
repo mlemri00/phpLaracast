@@ -1,6 +1,6 @@
-<?= require('views/partials/head.php') ?>
-<?= require("views/partials/nav.php") ?>
-<?= require("views/partials/banner.php") ?>
+<?= require(base_path('views/partials/head.php')) ?>
+<?= require(base_path("views/partials/nav.php")) ?>
+<?= require(base_path("views/partials/banner.php")) ?>
 
 
     <main>
@@ -12,4 +12,4 @@
             <p>   <?= htmlspecialchars($note['body'])?> </p>
         </div>
     </main>
-<?= require('partials/footer.php') ?>
+<?= require (base_path('partials/footer.php'))?>
