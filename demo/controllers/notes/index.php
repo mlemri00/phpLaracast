@@ -7,4 +7,4 @@ $heading = "My Notes";
 
 $notes = $dba->query('select * from notes ')->get() ;
 
-require "views/notes.view.php";
+require "views/notes/index.view.php";
