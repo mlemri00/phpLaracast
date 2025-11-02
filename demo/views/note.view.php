@@ -8,7 +8,7 @@
             <p class="mb-6">
                 <a href="/notes">Go back...</a>
             </p>
-            <p><?= $note['body']?> </p>
+            <p>   <?= htmlspecialchars($note['body'])?> </p>
         </div>
     </main>
 <?= require ('partials/footer.php')?>
