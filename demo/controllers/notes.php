@@ -1,6 +1,5 @@
 <?php
 
-require ('Database.php');
 $config = require('config.php');
 $dba = new Database($config);
 

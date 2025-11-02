@@ -1,6 +1,5 @@
 <?php
 
-require ("functions.php");
 
 $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
 /*//el _SERVER és variable global que té una llista de variables,
