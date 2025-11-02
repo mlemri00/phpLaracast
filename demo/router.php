@@ -9,13 +9,7 @@ l'enrutador sempre tengui la informació correcta
 
 */
 
-$routes = [
-    '/'=>'controllers/index.php',
-    '/about'=>'controllers/about.php',
-    '/notes'=>'controllers/notes.php',
-    '/note'=>'controllers/note.php',
-    '/contact'=>'controllers/contact.php'
-];
+$routes = require ('routes.php');
 
 function routeToController($uri,$routes){
     if(array_key_exists($uri,$routes)){
