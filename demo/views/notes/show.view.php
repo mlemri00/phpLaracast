@@ -12,4 +12,4 @@
             <p>   <?= htmlspecialchars($note['body'])?> </p>
         </div>
     </main>
-<?= require (base_path('partials/footer.php'))?>
+<?= require (base_path('views/partials/footer.php'))?>

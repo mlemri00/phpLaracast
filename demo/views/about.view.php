@@ -9,4 +9,4 @@
             <p class="text-white">About page</p>
         </div>
     </main>
-<?= require (base_path('partials/footer.php'))?>
+<?= require (base_path('views/partials/footer.php'))?>
