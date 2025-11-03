@@ -5,7 +5,10 @@ require BASE_PATH . 'core/functions.php';
 
 
 spl_autoload_register(function ($class){
-    require base_path("core/{$class}.php");
+
+    $class = str_replace('\\',DIRECTORY_SEPARATOR,$class);
+
+    require base_path("{$class}.php");
 });
 
 require base_path('core/router.php');

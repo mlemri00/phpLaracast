@@ -1,6 +1,9 @@
 <?php
 
 
+use core\Database;
+use core\Validator;
+
 $config = require(base_path('config.php'));
 $dba = new Database($config);
 $errors =[];
