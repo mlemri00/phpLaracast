@@ -1,10 +1,10 @@
 <?php
 
+use core\App;
 use core\Database;
 use core\Validator;
 
-$config = require(base_path('config.php'));
-$dba = new Database($config);
+$db = App::resolve(Database::class);
 $errors =[];
 
 
@@ -19,7 +19,7 @@ $errors =[];
         ]);
     }
 
-    $dba->query(
+    $db->query(
         'INSERT INTO notes (body, user_id)
                 VALUES (:body,:user_id)',
         [

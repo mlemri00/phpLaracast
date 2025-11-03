@@ -1,11 +1,12 @@
 <?php
 
+use core\App;
 use core\Database;
 
 $config = require(base_path('config.php'));
-$dba = new Database($config);
+$db = App::resolve(Database::class);
 
-$notes = $dba->query('select * from notes ')->get() ;
+$notes = $db->query('select * from notes ')->get() ;
 
 view("notes/index.view.php",
     ["heading"=>"Notes"
