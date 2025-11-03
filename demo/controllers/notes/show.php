@@ -4,7 +4,7 @@ use core\Database;
 
 $config = require(base_path('config.php'));
 $dba = new Database($config);
-$currentUserId = 1;
+$currentUserId = 2;
 
 
 if ($_SERVER['REQUEST_METHOD']==='POST'){
