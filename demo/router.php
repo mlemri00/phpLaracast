@@ -22,7 +22,7 @@ function routeToController($uri,$routes){
 
 function abort($code = 404 ){// això és per fer un paràmetre de sèrie si no es passa ni un
     http_response_code($code);
-    require "views/{$code}.php";
+    require base_path("views/{$code}.php");
 
     die();
 }
