@@ -4,16 +4,36 @@ use core\Database;
 
 $config = require(base_path('config.php'));
 $dba = new Database($config);
-
-$note = $dba->query('select * from notes where id = :id',[
-    'id'=>$_GET['id']
-])->findOrFail() ;
-
 $currentUserId = 1;
-authorize($note['user_id']==$currentUserId);
+
+
+if ($_SERVER['REQUEST_METHOD']==='POST'){
+
+    $note = $dba->query('select * from notes where id = :id', [
+        'id' => $_GET['id']
+    ])->findOrFail();
+
+    authorize($note['user_id']===$currentUserId);
+
+    $dba->query('delete from notes where id = :id',[
+        'id'=>$_GET['id']
+    ]);
+    header('location: /notes');
+    exit();
+
+}else {
+
+    $note = $dba->query('select * from notes where id = :id', [
+        'id' => $_GET['id']
+    ])->findOrFail();
+
+
+    authorize($note['user_id'] == $currentUserId);
 
 
 
+
+}
 view("notes/show.view.php",
     ["heading"=>"Note"
-    ,"note"=>$note]);
+        ,"note"=>$note]);
