@@ -23,7 +23,7 @@ class Middleware
             throw new \Exception('No matching middlware for key '. $key);
         }
 
-        (new $middleware)->handle()
+        (new $middleware)->handle();
 
     }
 
