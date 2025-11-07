@@ -11,7 +11,9 @@ $container->bind('core\Database',function (){
     $config = require base_path('config.php');
 
 
-    return new Database($config);
+    return new Database($config
+
+    );
 });
 
 
