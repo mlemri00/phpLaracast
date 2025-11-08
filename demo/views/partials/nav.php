@@ -10,7 +10,10 @@
                         <!-- Current: "bg-gray-950/50 text-white", Default: "text-gray-300 hover:bg-white/5 hover:text-white" -->
                         <a href="/" class= "<?= urlIs('/') ? 'bg-gray-500 text-white' : 'text-gray-300'; ?> rounded-md px-3 py-2 text-sm font-medium hover:bg-white/5 hover:text-white">Home</a>
                         <a href="/about" class= "<?= urlIs('/about') ? 'bg-gray-500 text-white' : 'text-gray-300'; ?> rounded-md px-3 py-2 text-sm font-medium hover:bg-white/5 hover:text-white">About</a>
-                        <a href="/notes" class= "<?= urlIs('/notes') ? 'bg-gray-500 text-white' : 'text-gray-300'; ?> rounded-md px-3 py-2 text-sm font-medium hover:bg-white/5 hover:text-white">Notes</a>
+
+                        <?php if ($_SESSION['user'] ?? false): ?>
+                            <a href="/notes" class= "<?= urlIs('/notes') ? 'bg-gray-500 text-white' : 'text-gray-300'; ?> rounded-md px-3 py-2 text-sm font-medium hover:bg-white/5 hover:text-white">Notes</a>
+                        <?php endif;  ?>
                         <a href="/contact" class= "<?= urlIs('/contact') ? 'bg-gray-500 text-white' : 'text-gray-300'; ?> rounded-md px-3 py-2 text-sm font-medium hover:bg-white/5 hover:text-white">Contact</a>
 
                     </div>
@@ -47,6 +50,16 @@
                             <a href="#" class="block px-4 py-2 text-sm text-gray-300 focus:bg-white/5 focus:outline-hidden">Sign out</a>
                         </el-menu>
                     </el-dropdown>
+
+                    <?php if($_SESSION['user']??false):  ?>
+                    <div class="relative ml-3">
+                        <form method="POST" action="/sessions">
+                            <input type="hidden" name="_method" value="DELETE">
+
+                            <button class="text-red-500">Log out</button>
+                        </form>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="-mr-2 flex md:hidden">
