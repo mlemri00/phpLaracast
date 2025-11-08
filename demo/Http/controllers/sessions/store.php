@@ -1,12 +1,9 @@
 <?php
 
 
-use core\App;
-use core\Database;
-use core\Validator;
+use core\Authenticator;
 use Http\Forms\LoginForm;
 
-$db = App::resolve(Database::class);
 
 
 $email = $_POST['email'];
@@ -21,26 +18,19 @@ if (! $form->validate($email,$password)){
     ]);
 }
 
-$user=$db->query('select * from users where email = :email',[
-    'email'=>$email
-])->find();
+$auth =new Authenticator();
 
-if($user){
-    if (password_verify($password,$user['password'])) {
+if($auth->attempt($email, $password)){
 
-        login(
-            [
-                'email' => $email
-            ]
-        );
-        header('location: /');
+   redirect('/');
 
-        exit();
-    }
+
+}else {
+    return view('sessions/create.view.php', [
+        'errors' => [
+            'email' => 'No matching accoutn found for that email adress and password'
+        ]
+    ]);
+
+
 }
-
-return view('sessions/create.view.php',[
-    'errors'=>[
-        'email'=>'No matching accoutn found for that email adress and password'
-    ]
-]);
