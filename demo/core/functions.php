@@ -35,3 +35,9 @@ function view($path,$attributes = []){
     extract($attributes);//extract ens extreu cada objecte de l'array a una variable
     require base_path('views/' . $path);//Cridam a l'arxiu desde function
 }
+
+function login($user){
+    $_SESSION['user']=[
+        'email'=>$user['email']
+    ];
+}
