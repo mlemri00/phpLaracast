@@ -1,6 +1,5 @@
 <?php
 
-use core\App;
 use core\Database;
 use core\Validator;
 
@@ -24,7 +23,7 @@ $errors =[];
                 VALUES (:body,:user_id)',
         [
             'body' => $_POST['body'],
-            'user_id' => 2
+            'user_id' => $_SESSION['user']['id']
         ]);
     header('location: /notes');
     die();

@@ -2,8 +2,6 @@
 
 namespace core\Middleware;
 
-use core\App;
-
 class Middleware
 {
     const MAP=[

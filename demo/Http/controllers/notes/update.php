@@ -1,7 +1,6 @@
 <?php
 
 use core\Database;
-use core\App;
 use core\Validator;
 
 

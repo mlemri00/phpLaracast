@@ -1,6 +1,6 @@
 <?php
 
-use core\App;
+use core\Authenticator;
 use core\Database;
 use core\Validator;
 
@@ -39,12 +39,13 @@ if($user){
         'email'=>$email,
         'password'=>password_hash($password,PASSWORD_BCRYPT)
     ]);
+    $id = $db->query('select id from users where email = :email',
+    ['email'=>$email])->find();
 
-   login(
-       [
-           'email'=>$email
-       ]
-   );
+
+    (new Authenticator)->login(['email'=>$email, 'id'=> $id['id']
+    ]);
 
     header('location: /');
+    exit();
 }
