@@ -17,9 +17,9 @@ if ($form->validate($email,$password)){
 
     if((new Authenticator)->attempt($email, $password)){
         redirect('/');
+    }else {
+        $form->error('email','No matching account found for that email address and password');
     }
-
-    $form->error('email','No matching account found for that email address and password');
 
 
 }
@@ -44,11 +44,11 @@ if ($user){
 
 
 
-return redirect('/login');
+//return redirect('/login');
 
 
-//    return view('sessions/create.view.php', [
-  //      'errors' => $form->errors()
-    //]);
+    return view('sessions/create.view.php', [
+        'errors' => $form->errors()
+    ]);
 
 
