@@ -3,6 +3,7 @@ namespace core;
 use core\Middleware\Auth;
 use core\Middleware\Guest;
 use core\Middleware\Middleware;
+use Http\controllers\NotesController;
 
 class Router{
 
@@ -14,7 +15,8 @@ class Router{
             'uri'=>$uri,
             'controller'=>$controller,
             'method'=>$method,
-            'middleware'=>null
+            'middleware'=>null,
+            'function'=>null
         ];
         return $this;
     }
@@ -45,24 +47,32 @@ class Router{
         $this->routes[array_key_last($this->routes)]['middleware'] = $key;
         return $this;
     }
+    public function setFunction($function){
+        $this->routes[array_key_last($this->routes)]['function'] = $function;
+        return $this;
+    }
 
 
 
     public function route($uri,$method){
         foreach ($this->routes as $route){
+            if ($route['function']!=null){
+
+                Middleware::resolve($route['middleware']);
+                return (new NotesController)->getFunction($route['function']);
+            }
 
             if ($route['uri']===$uri && $route['method']=== strtoupper($method)){
 
                 Middleware::resolve($route['middleware']);
-
-
-
 
                 return require base_path('Http/controllers/'.$route['controller']);
             }
         }
         $this->abort();
     }
+
+
     protected function abort($code = 404 ){// això és per fer un paràmetre de sèrie si no es passa ni un
         http_response_code($code);
         require base_path("views/{$code}.php");
