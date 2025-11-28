@@ -7,9 +7,9 @@ use Http\controllers\notes\NotesController;
 class Router{
     protected $classes;
     public function __construct()
-    {
+    {   //Aqui posam totes les classes que volem implementar al controller
         $this->classes=[
-          'note'=>new NotesController()
+          'notes'=>new NotesController()
         ];
     }
 
