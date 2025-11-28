@@ -1,13 +1,19 @@
 <?php
 
 
+use Http\controllers\notes\NotesController;
+
+$noteController = new NotesController();
 
 $router->get('/','index.php');
 $router->get( '/about','about.php');
-$router->get('/notes','notes/index.php')->only("auth")->setFunction('getIndex');
-
 //$router->get('/notes','notes/index.php')->only("auth");
-$router->get('/note','notes/show.php');
+$router->get('/notes',"note@getAllNotes")->only("auth")   ;
+
+
+//$router->get('/note','notes/show.php');
+$router->get('/note',"note@show")->only("auth");
+
 
 $router->get('/notes/create','notes/create.php');
 $router->delete('/note','notes/destroy.php');

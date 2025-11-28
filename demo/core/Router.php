@@ -1,30 +1,34 @@
 <?php
 namespace core;
-use core\Middleware\Auth;
-use core\Middleware\Guest;
+use App;
 use core\Middleware\Middleware;
-use Http\controllers\NotesController;
+use Http\controllers\notes\NotesController;
 
 class Router{
+    protected $classes;
+    public function __construct()
+    {
+        $this->classes=[
+          'note'=>new NotesController()
+        ];
+    }
 
     protected $routes =[];
-
-
     public function add($method,$uri,$controller){
         $this->routes[]=[
             'uri'=>$uri,
             'controller'=>$controller,
             'method'=>$method,
             'middleware'=>null,
-            'function'=>null
         ];
         return $this;
     }
+
     public function get($uri,$controller){
         return $this->add("GET",$uri,$controller);
     }
 
-    public function post($uri,$controller){
+    public function post($uri,$controller ){
         return $this->add("POST",$uri,$controller);
 
     }
@@ -47,30 +51,30 @@ class Router{
         $this->routes[array_key_last($this->routes)]['middleware'] = $key;
         return $this;
     }
-    public function setFunction($function){
-        $this->routes[array_key_last($this->routes)]['function'] = $function;
-        return $this;
-    }
-
-
 
     public function route($uri,$method){
         foreach ($this->routes as $route){
-            if ($route['function']!=null){
-
-                Middleware::resolve($route['middleware']);
-                return (new NotesController)->getFunction($route['function']);
-            }
-
             if ($route['uri']===$uri && $route['method']=== strtoupper($method)){
-
                 Middleware::resolve($route['middleware']);
+                 if (str_contains($route['controller'], "@")){
 
-                return require base_path('Http/controllers/'.$route['controller']);
+                     $function = explode("@",$route['controller'],2);
+
+                     foreach(array_keys($this->classes) as $classKey){
+                         if ($function[0]===$classKey){
+                            [$this->classes[$classKey],$function[1]]();
+                         }
+                     }
+                 }else {
+                     return require base_path('Http/controllers/' . $route['controller']);
+                 }
             }
         }
-        $this->abort();
+        $this->abort(404);
     }
+
+
+
 
 
     protected function abort($code = 404 ){// això és per fer un paràmetre de sèrie si no es passa ni un
@@ -80,10 +84,9 @@ class Router{
         die();
     }
 
+    private function getClassInstance($class, $method){
 
-
-
-
+    }
 
 
 
