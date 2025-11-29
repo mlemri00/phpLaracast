@@ -5,64 +5,46 @@ namespace Http\controllers\notes;
 use App;
 use core\Database;
 use core\Validator;
+use Http\dao\NoteDao;
 
 class NotesController
 {
-
+    private $noteDao;
     public function __construct()
     {
-
+    $this->noteDao=new NoteDao();
     }
 
 
     public function index(){
-        $db=App::resolve(Database::class);
-
-    $notes =$db->query("select * from notes where user_id = :user_id",[
-        'user_id'=>$_SESSION['user']['id']
-    ])->get() ;
+    $userId = $_SESSION['user']['id'];
+    $notes = $this->noteDao->getAllNotes($userId);
 
     view("notes/index.view.php",
         ["heading"=>"Notes"
             ,"notes"=>$notes]);
 }
 
-public function show(){
-    $db=App::resolve(Database::class);
-    $currentUserId = $_SESSION['user']['id'];
+    public function show(){
+        $currentUserId = $_SESSION['user']['id'];
+
+        $note = $this->noteDao->getNote($_GET['id']);
+
+        authorize($note->getUserId() == $currentUserId);
 
 
-
-
-    $note = $db->query('select * from notes where id = :id', [
-        'id' => $_GET['id']
-    ])->findOrFail();
-
-
-    authorize($note['user_id'] == $currentUserId);
-
-
-    view("notes/show.view.php",
-        ["heading"=>"Note"
-            ,"note"=>$note]);
+        view("notes/show.view.php",
+            ["heading"=>"Note"
+                ,"note"=>$note]);
 
 }
 public function edit(){
-    $db=App::resolve(Database::class);
+
     $currentUserId = $_SESSION['user']['id'];
 
+    $note = $this->noteDao->getNote($_GET['id']);
 
-
-
-    $note = $db->query('select * from notes where id = :id', [
-        'id' => $_GET['id']
-    ])->findOrFail();
-
-
-    authorize($note['user_id'] == $currentUserId);
-
-
-
+    authorize($note->getUserId() == $currentUserId);
 
     view("notes/edit.view.php",[
         'heading'=>'Edit Note',
@@ -72,18 +54,16 @@ public function edit(){
 }
 
 public function delete(){
+
     $currentUserId = $_SESSION['user']['id'];
-    $db=App::resolve(Database::class);
 
-    $note = $db->query('select * from notes where id = :id', [
-        'id' => $_POST['id']
-    ])->findOrFail();
+    $noteID =$_POST['id'];
 
-    authorize($note['user_id']===$currentUserId);
+    $note = $this->noteDao->getNote($noteID);
+    authorize($note->getUserId()===$currentUserId);
 
-    $db->query('delete from notes where id = :id',[
-        'id'=>$_POST['id']
-    ]);
+    $this->noteDao->deleteNote($noteID);
+
     header('location: /notes');
     exit();
 
@@ -98,9 +78,11 @@ public function create(){
 
 public function store(){
     $errors =[];
-    $db=App::resolve(Database::class);
 
-    if (!Validator::string($_POST['body'],1,1000)){
+    $body = $_POST['body'];
+    $userId = $_SESSION['user']['id'];
+
+    if (!Validator::string($body,1,1000)){
         $errors['body']='A body of no more than 1000 characters,  is required';
     }
 
@@ -111,13 +93,8 @@ public function store(){
         ]);
     }
 
-    $db->query(
-        'INSERT INTO notes (body, user_id)
-                VALUES (:body,:user_id)',
-        [
-            'body' => $_POST['body'],
-            'user_id' => $_SESSION['user']['id']
-        ]);
+    $this->noteDao->createNote($body,$userId);
+
     header('location: /notes');
     die();
 

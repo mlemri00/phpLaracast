@@ -1,13 +1,10 @@
 <?php
 
 
-use Http\controllers\notes\NotesController;
 
-$noteController = new NotesController();
 
 $router->get('/','index.php');
 $router->get( '/about','about.php');
-//$router->get('/notes','notes/index.php')->only("auth");
 $router->get('/notes',"notes@index")->only("auth")   ;
 
 
@@ -15,7 +12,7 @@ $router->get('/note',"notes@show")->only("auth");
 
 
 $router->get('/notes/create','notes@create');
-$router->delete('/note','notes@destroy');
+$router->delete('/note','notes@delete');
 
 $router->get('/note/edit','notes@edit');
 $router->patch('/note','notes@update');

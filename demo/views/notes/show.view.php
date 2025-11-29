@@ -9,11 +9,18 @@
             <p class="mb-6">
                 <a href="/notes">Go back...</a>
             </p>
-            <p>   <?= htmlspecialchars($note['body'])?> </p>
+            <p>   <?= htmlspecialchars($note->getBody())?> </p>
+            <form action="/note"  method="POST">
+                <input type="hidden" name="_method" value="DELETE">
+                <input type="hidden" name="id" value="<?= $note->getId();?>">
+
+                <button class="rounded-md bg-red-700 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700" type="submit">Delete</button>
+            </form>
             <footer class="mt-6">
-                <a href="/note/edit?id=<?= $note['id']?>" class="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Edit</a>
+                <a href="/note/edit?id=<?= $note->getId();?>" class="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Edit</a>
 
             </footer>
+
         </div>
     </main>
 <?= require (base_path('views/partials/footer.php'))?>
