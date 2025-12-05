@@ -1,8 +1,7 @@
 <?php
 namespace core;
-use App;
 use core\Middleware\Middleware;
-use Http\controllers\notes\NotesController;
+use Http\controllers\classes\NotesController;
 
 class Router{
     protected $classes;

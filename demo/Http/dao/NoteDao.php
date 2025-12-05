@@ -4,6 +4,7 @@ namespace Http\dao;
 
 use App;
 use core\Database;
+use Http\dao\interfaces\INoteDao;
 use Http\models\Note;
 
 class NoteDao implements INoteDao

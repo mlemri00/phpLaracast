@@ -1,6 +1,6 @@
 <?php
 
-namespace Http\dao;
+namespace Http\dao\interfaces;
 
 interface INoteDao
 {

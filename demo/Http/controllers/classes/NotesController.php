@@ -1,6 +1,6 @@
 <?php
 
-namespace Http\controllers\notes;
+namespace Http\controllers\classes;
 
 use App;
 use core\Database;
