@@ -14,17 +14,23 @@ function urlIs($value){
     return $_SERVER['REQUEST_URI'] === $value;
 }
 
-function authorize($condition,$status=Response::FORBIDDEN){
+function authorize($condition,$status=Response::FORBIDDEN,$apiRest = false){
     if (!$condition){
-        abort($status);
+
+        abort($status,$apiRest);
     }
 
 
 }
-function abort($code = 404 ){// això és per fer un paràmetre de sèrie si no es passa ni un
+function abort($code = 404,$apiRest=false){// això és per fer un paràmetre de sèrie si no es passa ni un
     http_response_code($code);
-    require base_path("views/{$code}.php");
-
+    if ($apiRest){
+        header('Content-Type: application/json');
+        echo json_encode(["message"=>"unauthorized"]);
+        die();
+    }else {
+        require base_path("views/{$code}.php");
+    }
     die();
 }
 function base_path($path){

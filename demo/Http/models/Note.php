@@ -4,9 +4,9 @@ namespace Http\models;
 
 class Note
 {
-private $id;
-private $body;
-private $user_id;
+public $id;
+public $body;
+public $user_id;
 
 
 public function __construct($id,$body,$user_id)

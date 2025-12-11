@@ -52,7 +52,14 @@ class Router{
     }
 
     public function route($uri,$method){
+        $apiRequest = false;
         foreach ($this->routes as $route){
+
+            if (str_contains($uri,"api/")){
+                $uri = str_replace("api/","",$uri);
+                $apiRequest=true;
+            }
+
             if ($route['uri']===$uri && $route['method']=== strtoupper($method)){
                 Middleware::resolve($route['middleware']);
                  if (str_contains($route['controller'], "@")){
@@ -61,7 +68,7 @@ class Router{
 
                      foreach(array_keys($this->classes) as $classKey){
                          if ($function[0]===$classKey){
-                            [$this->classes[$classKey],$function[1]]();
+                            [$this->classes[$classKey],$function[1]]($apiRequest);
                          }
                      }
                  }else {
