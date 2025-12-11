@@ -34,9 +34,8 @@ class NotesController
 
     public function show($apiRequest = false){
         $currentUserId = $_SESSION['user']['id'];
-
-        $note = $this->noteDao->getNote($_GET['id']);
-        authorize($note->getUserId() == $currentUserId,404,$apiRequest);
+        $note = $this->noteDao->getNote($_GET['id'],$apiRequest);
+        authorize($note->getUserId() == $currentUserId,$apiRequest);
         if ($apiRequest){
             header('Content-Type: application/json');
             echo json_encode(["note" =>$note]);
@@ -62,18 +61,21 @@ public function edit(){
     ]);
 }
 
-public function delete(){
+public function delete($apiRequest= false){
 
     $currentUserId = $_SESSION['user']['id'];
 
     $noteID =$_POST['id'];
-
     $note = $this->noteDao->getNote($noteID);
-    authorize($note->getUserId()===$currentUserId);
-
+    authorize($note->getUserId()===$currentUserId,$apiRequest);
     $this->noteDao->deleteNote($noteID);
-
-    header('location: /notes');
+    if ($apiRequest){
+        header('Content-Type: application/json');
+        echo json_encode(["message"=>"Note has been deleted"]);
+        die();
+    }else{
+        header('location: /notes');
+    }
     exit();
 
 }

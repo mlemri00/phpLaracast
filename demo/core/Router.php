@@ -59,9 +59,10 @@ class Router{
                 $uri = str_replace("api/","",$uri);
                 $apiRequest=true;
             }
-
+            dd($_SERVER['REQUEST_METHOD']);
             if ($route['uri']===$uri && $route['method']=== strtoupper($method)){
-                Middleware::resolve($route['middleware']);
+                Middleware::resolve($route['middleware'],$apiRequest);
+
                  if (str_contains($route['controller'], "@")){
 
                      $function = explode("@",$route['controller'],2);

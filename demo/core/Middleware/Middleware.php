@@ -10,7 +10,7 @@ class Middleware
     ];
 
 
-    public static function resolve($key){
+    public static function resolve($key,$apiRequest = false){
 
         if(!$key){
             return;
@@ -21,7 +21,7 @@ class Middleware
             throw new \Exception('No matching middlware for key '. $key);
         }
 
-        (new $middleware)->handle();
+        (new $middleware)->handle($apiRequest);
 
     }
 

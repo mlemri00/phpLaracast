@@ -38,10 +38,10 @@ class Database{
     public function find(){return $this->statement->fetch();
     }
 
-    public function findOrFail(){
+    public function findOrFail($apiRequest=false){
         $result = $this->find();
         if (!$result){
-            abort();
+            abort($apiRequest);
         }
        return $result;
     }
