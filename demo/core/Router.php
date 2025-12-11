@@ -58,8 +58,8 @@ class Router{
             if (str_contains($uri,"api/")){
                 $uri = str_replace("api/","",$uri);
                 $apiRequest=true;
+
             }
-            dd($_SERVER['REQUEST_METHOD']);
             if ($route['uri']===$uri && $route['method']=== strtoupper($method)){
                 Middleware::resolve($route['middleware'],$apiRequest);
 

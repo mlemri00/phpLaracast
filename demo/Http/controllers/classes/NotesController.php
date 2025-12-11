@@ -16,6 +16,10 @@ class NotesController
     }
 
 
+
+
+
+
     public function index($apiRequest = false){
     $userId = $_SESSION['user']['id'];
     $notes = $this->noteDao->getAllNotes($userId);
@@ -32,6 +36,13 @@ class NotesController
     }
 }
 
+
+
+
+
+
+
+
     public function show($apiRequest = false){
         $currentUserId = $_SESSION['user']['id'];
         $note = $this->noteDao->getNote($_GET['id'],$apiRequest);
@@ -46,6 +57,13 @@ class NotesController
                     , "note" => $note]);
         }
 }
+
+
+
+
+
+
+
 public function edit(){
 
     $currentUserId = $_SESSION['user']['id'];
@@ -61,17 +79,22 @@ public function edit(){
     ]);
 }
 
+
+
+
+
+
 public function delete($apiRequest= false){
 
     $currentUserId = $_SESSION['user']['id'];
+    $noteID =$_POST['id'] ?? $_GET['id'];
 
-    $noteID =$_POST['id'];
-    $note = $this->noteDao->getNote($noteID);
+    $note = $this->noteDao->getNote($noteID,$apiRequest);
+
     authorize($note->getUserId()===$currentUserId,$apiRequest);
     $this->noteDao->deleteNote($noteID);
     if ($apiRequest){
-        header('Content-Type: application/json');
-        echo json_encode(["message"=>"Note has been deleted"]);
+        header('location: /api/notes');
         die();
     }else{
         header('location: /notes');
@@ -81,73 +104,111 @@ public function delete($apiRequest= false){
 }
 
 
+
+
+
+
+
 public function create(){
     view("notes/create.view.php",
         ["heading"=>"Create note"
             ,"errors"=>[]]);
 }
 
-public function store(){
+
+
+
+
+
+public function store($apiRequest=false){
     $errors =[];
 
     $body = $_POST['body'];
     $userId = $_SESSION['user']['id'];
-
     if (!Validator::string($body,1,1000)){
         $errors['body']='A body of no more than 1000 characters,  is required';
     }
 
-    if (! empty($errors)){
-        return view("notes/create.view.php",[
-            'heading'=>'Create Note',
-            'errors'=>$errors
-        ]);
+    if (!empty($errors)){
+        if ($apiRequest){
+            header('Content-Type: application/json');
+            echo json_encode(["message"=>$errors]);
+            die();
+
+        }else {
+            return view("notes/create.view.php", [
+                'heading' => 'Create Note',
+                'errors' => $errors
+            ]);
+        }
     }
 
     $this->noteDao->createNote($body,$userId);
 
-    header('location: /notes');
-    die();
+    if ($apiRequest){
+        header('location: /api/notes');
+        die();
+    }else {
+        header('location: /notes');
+        die();
+    }
 
 
 
 }
-public function update(){
+
+
+
+
+
+public function update($apiRequest = false){
     $db = App::resolve(Database::class);
 
 
     $currentUserId = $_SESSION['user']['id'];
+    $noteId = $_POST['id'] ?? $_GET['id'];
 
     $note = $db -> query('select * from notes where id = :id',[
-        'id'=>$_POST['id']
-    ])->findOrFail();
+        'id'=>$noteId
+    ])->findOrFail($apiRequest);
 
 
-    authorize($note['user_id']===$currentUserId);
+    authorize($note['user_id']===$currentUserId,$apiRequest);
 
     $errors = [];
 
-    if (!Validator::string($_POST['body'],1,1000)){
+    if (!Validator::string($_POST['body'] ?? $_GET['body'],1,1000)){
         $errors['body']='A body of no more than 1000 characters,  is required';
     }
 
 
     if (count($errors)){
-        return view('notes/edit.view.php',[
-            'heading'=>'Edit Note',
-            'errors'=>$errors,
-            'note'=>$note
-        ]);
+        if ($apiRequest) {
+            header('Content-Type: application/json');
+            echo json_encode(["message" => $errors]);
+            die();
+        }else{
+                return view('notes/edit.view.php', [
+                    'heading' => 'Edit Note',
+                    'errors' => $errors,
+                    'note' => $note
+                ]);
+            }
     }
 
     $db -> query('update notes set body = :body where id = :id',[
 
-        'body' => $_POST['body']
-        , 'id'=>$_POST['id']
+        'body' => $_POST['body'] ?? $_GET['body']
+        , 'id'=>$noteId
     ]);
 
-    header('location: /notes');
-    die();
+    if ($apiRequest){
+        header('location: /api/notes');
+        die();
+    }else {
+        header('location: /notes');
+        die();
+    }
 }
 
 
