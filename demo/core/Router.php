@@ -1,6 +1,7 @@
 <?php
 namespace core;
 use core\Middleware\Middleware;
+use Http\controllers\classes\JwtController;
 use Http\controllers\classes\NotesController;
 
 class Router{
@@ -8,7 +9,8 @@ class Router{
     public function __construct()
     {   //Aqui posam totes les classes que volem implementar al controller
         $this->classes=[
-          'notes'=>new NotesController()
+          'notes'=>new NotesController(),
+          'jwtAuth'=>new JwtController()
         ];
     }
 

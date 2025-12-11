@@ -28,5 +28,8 @@ $router->get('/login','sessions/create.php')->only('guest');
 $router->post('/sessions','sessions/store.php')->only('guest');
 $router->delete('/sessions','sessions/destroy.php')->only('auth');
 
+
+$router->post('/registerjson','jwtAuth@register');
+$router->post('/authenticate','jwtAuth@authenticate');
 ////TEST TEST TEST TEST
 

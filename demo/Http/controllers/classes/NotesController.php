@@ -4,6 +4,7 @@ namespace Http\controllers\classes;
 
 use App;
 use core\Database;
+use core\Middleware\Auth;
 use core\Validator;
 use Http\dao\NoteDao;
 
@@ -21,9 +22,10 @@ class NotesController
 
 
     public function index($apiRequest = false){
-    $userId = $_SESSION['user']['id'];
+    $userId = $_SESSION['user']['id'] ?? Auth::getUserIdFromJwt();
     $notes = $this->noteDao->getAllNotes($userId);
     //REST index
+
     if ($apiRequest){
         header('Content-Type: application/json');
         echo json_encode(["notes" =>$notes]);
@@ -44,9 +46,14 @@ class NotesController
 
 
     public function show($apiRequest = false){
-        $currentUserId = $_SESSION['user']['id'];
+
+        $currentUserId = $_SESSION['user']['id']?? Auth::getUserIdFromJwt();
         $note = $this->noteDao->getNote($_GET['id'],$apiRequest);
+
+
         authorize($note->getUserId() == $currentUserId,$apiRequest);
+
+
         if ($apiRequest){
             header('Content-Type: application/json');
             echo json_encode(["note" =>$note]);
@@ -58,15 +65,9 @@ class NotesController
         }
 }
 
-
-
-
-
-
-
 public function edit(){
 
-    $currentUserId = $_SESSION['user']['id'];
+    $currentUserId = $_SESSION['user']['id']?? Auth::getUserIdFromJwt();
 
     $note = $this->noteDao->getNote($_GET['id']);
 
@@ -86,13 +87,15 @@ public function edit(){
 
 public function delete($apiRequest= false){
 
-    $currentUserId = $_SESSION['user']['id'];
+    $currentUserId = $_SESSION['user']['id'] ?? Auth::getUserIdFromJwt();
     $noteID =$_POST['id'] ?? $_GET['id'];
 
     $note = $this->noteDao->getNote($noteID,$apiRequest);
 
     authorize($note->getUserId()===$currentUserId,$apiRequest);
+
     $this->noteDao->deleteNote($noteID);
+
     if ($apiRequest){
         header('location: /api/notes');
         die();
@@ -106,9 +109,6 @@ public function delete($apiRequest= false){
 
 
 
-
-
-
 public function create(){
     view("notes/create.view.php",
         ["heading"=>"Create note"
@@ -117,19 +117,20 @@ public function create(){
 
 
 
-
-
-
 public function store($apiRequest=false){
     $errors =[];
 
     $body = $_POST['body'];
-    $userId = $_SESSION['user']['id'];
+    $userId = $_SESSION['user']['id'] ?? Auth::getUserIdFromJwt();
+
+
     if (!Validator::string($body,1,1000)){
         $errors['body']='A body of no more than 1000 characters,  is required';
     }
 
     if (!empty($errors)){
+
+
         if ($apiRequest){
             header('Content-Type: application/json');
             echo json_encode(["message"=>$errors]);
@@ -141,6 +142,8 @@ public function store($apiRequest=false){
                 'errors' => $errors
             ]);
         }
+
+
     }
 
     $this->noteDao->createNote($body,$userId);
@@ -165,7 +168,7 @@ public function update($apiRequest = false){
     $db = App::resolve(Database::class);
 
 
-    $currentUserId = $_SESSION['user']['id'];
+    $currentUserId = $_SESSION['user']['id'] ?? Auth::getUserIdFromJwt();
     $noteId = $_POST['id'] ?? $_GET['id'];
 
     $note = $db -> query('select * from notes where id = :id',[
