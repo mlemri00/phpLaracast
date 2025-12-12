@@ -9,7 +9,7 @@ private $key;
         $this->key="e6624d8b2651358b444af192";
     }
 
-    public function encode(array $payload): string{
+    public function encode(array $payload){
 
         $header = json_encode([
             "alg" => "HS256",
@@ -27,7 +27,7 @@ private $key;
 
 
 
-    public function decode(string $token): array
+    public function decode(string $token)
     {
         if (preg_match("/^(?<header>.+)\.(?<payload>.+)\.(?<signature>.+)$/", $token, $matches) !== 1) {
             throw new InvalidArgumentException("invalid token format");
@@ -54,13 +54,13 @@ private $key;
     }
 
 
-    private function base64URLEncode(string $text): string
+    private function base64URLEncode(string $text)
     {
 
         return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($text));
     }
 
-    private function base64URLDecode(string $text): string
+    private function base64URLDecode(string $text)
     {
         return base64_decode(
             str_replace(
