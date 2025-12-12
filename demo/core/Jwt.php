@@ -13,7 +13,9 @@ private $key;
 
         $header = json_encode([
             "alg" => "HS256",
-            "typ" => "JWT"
+            "typ" => "JWT",
+            "createdAt"=>date_create(),
+            "rand"=>random_int(1,26589)
         ]);
 
         $header = $this->base64URLEncode($header);

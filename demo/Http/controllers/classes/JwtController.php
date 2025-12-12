@@ -7,6 +7,7 @@ use core\Authenticator;
 use core\Database;
 use core\Jwt;
 use core\Validator;
+use Http\dao\JwtDao;
 use Http\Forms\LoginForm;
 
 class JwtController{
@@ -56,14 +57,13 @@ class JwtController{
                 ['email'=>$email])->find();
 
 
-            $createdAt = date_create();
-
             $payload = [
-                "id" => $id,
-                "createdAt"=>$createdAt
+                "id" => $id
             ];
 
             $token =  $this->jwt->encode($payload);
+
+            JwtDao::storeToken($token,$id['id']);
 
             header('Content-Type: application/json');
             echo json_encode(["token"=>$token]);
@@ -87,15 +87,16 @@ class JwtController{
                     ['email'=>$email])->find();
 
 
-                $createdAt = date_create();
 
                 $payload = [
-                    "id" => $id,
-                    "createdAt"=>$createdAt
+                    "id" => $id
                 ];
 
                 $token =  $this->jwt->encode($payload);
                 $payload = $this->jwt->decode($token);
+
+                JwtDao::storeToken($token,$id['id']);
+
                 header('Content-Type: application/json');
                 echo json_encode(["token"=>$token,
                     "payload"=>$payload]);
