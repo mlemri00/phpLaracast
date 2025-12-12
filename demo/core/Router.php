@@ -55,8 +55,8 @@ class Router{
 
     public function route($uri,$method){
         $apiRequest = false;
-        foreach ($this->routes as $route){
 
+        foreach ($this->routes as $route){
             if (str_contains($uri,"api/")){
                 $uri = str_replace("api/","",$uri);
                 $apiRequest=true;

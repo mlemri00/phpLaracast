@@ -86,6 +86,8 @@ class Auth
     }
 
     public static function getUserIdFromJwt(){
+        (new Auth)->authenticateJWTToken();
+
         $jwt = new Jwt();
         if (!preg_match("/^Bearer\s+(.*)$/", $_SERVER["HTTP_AUTHORIZATION"], $matches)) {
             http_response_code(400);

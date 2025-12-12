@@ -31,5 +31,6 @@ $router->delete('/sessions','sessions/destroy.php')->only('auth');
 
 $router->post('/registerjson','jwtAuth@register');
 $router->post('/authenticate','jwtAuth@authenticate');
+$router->delete("/deletetoken","jwtAuth@deleteToken");
 ////TEST TEST TEST TEST
 

@@ -6,6 +6,7 @@ use App;
 use core\Authenticator;
 use core\Database;
 use core\Jwt;
+use core\Middleware\Auth;
 use core\Validator;
 use Http\dao\JwtDao;
 use Http\Forms\LoginForm;
@@ -111,7 +112,32 @@ class JwtController{
             }
 
 
+
+
         }
 
     }
+    public function deleteToken(){
+        $userId = Auth::getUserIdFromJwt();
+
+
+
+        $tokenId = $_POST['id'] ?? $_GET['id'];
+
+        $token = JwtDao::getToken($tokenId);
+
+        $tokenUserId = $this->jwt->decode($token['token'])['id']['id'];
+        if ($userId!=$tokenUserId) {
+            abort(true,403);
+        }
+        JwtDao::deleteToken($tokenId);
+        header('Content-Type: application/json');
+        echo json_encode(["message"=>"Token deleted"]);
+        die();
+    }
+    public function deleteAllTokens(){
+        $userId = Auth::getUserIdFromJwt();
+
+    }
+
 }

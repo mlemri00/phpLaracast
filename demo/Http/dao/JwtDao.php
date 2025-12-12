@@ -34,4 +34,23 @@ class JwtDao
         return $lastId;
     }
 
+    public static function deleteToken($tokenId)
+    {
+
+        $db=App::resolve(Database::class);
+
+        $db->query('delete from token where id = :id',[
+            'id'=>$tokenId
+        ]);
+
+    }
+
+    public static function getToken($tokenId){
+        $db=App::resolve(Database::class);
+        $token = $db->query('select * from token where id = :id', [
+            'id' => $tokenId
+        ])->findOrFail(true);
+        return $token;
+    }
+
 }
