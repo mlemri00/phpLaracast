@@ -59,9 +59,10 @@ private $key;
 
         return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($text));
     }
-
+        //per encode
     private function base64URLDecode(string $text)
     {
+
         return base64_decode(
             str_replace(
                 ["-", "_"],
