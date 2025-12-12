@@ -20,12 +20,16 @@ class JwtDao
             ]);
     }
 
-    public static function getAllToken($userId){
+    public static function getAllTokens($userId){
         $db=App::resolve(Database::class);
         $tokens =$db->query("select * from token where user_id = :user_id",[
             'user_id'=>$userId
         ])->get();
         return $tokens;
+    }
+
+    public static function getLastId(){
+
     }
 
 }
