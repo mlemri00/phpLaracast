@@ -55,9 +55,14 @@ class JwtController{
             $id = $db->query('select id from users where email = :email',
                 ['email'=>$email])->find();
 
+
+            $createdAt = date_create();
+
             $payload = [
-                "id" => $id
+                "id" => $id,
+                "createdAt"=>$createdAt
             ];
+
             $token =  $this->jwt->encode($payload);
 
             header('Content-Type: application/json');
@@ -80,9 +85,15 @@ class JwtController{
 
                 $id = $db->query('select id from users where email = :email',
                     ['email'=>$email])->find();
+
+
+                $createdAt = date_create();
+
                 $payload = [
-                    "id" => $id
+                    "id" => $id,
+                    "createdAt"=>$createdAt
                 ];
+
                 $token =  $this->jwt->encode($payload);
                 $payload = $this->jwt->decode($token);
                 header('Content-Type: application/json');
