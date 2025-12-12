@@ -138,6 +138,11 @@ class JwtController{
     public function deleteAllTokens(){
         $userId = Auth::getUserIdFromJwt();
 
+        JwtDao::deleteAllTokens($userId);
+
+        header('Content-Type: application/json');
+        echo json_encode(["message"=>"Tokens deleted"]);
+        die();
     }
 
 }

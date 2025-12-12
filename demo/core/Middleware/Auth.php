@@ -46,6 +46,12 @@ class Auth
 
             $tokens = JwtDao::getAllTokens($userId);
 
+            if ($tokens==null){
+                http_response_code(403);
+                echo json_encode(["message" => "Invalid token"]);
+                die();
+            }
+
             foreach ($tokens as $token){
                 $dbTokenId = $this->jwt->decode($token['token'])['tokenId'];
 
@@ -62,6 +68,10 @@ class Auth
                         die();
 
                     }
+                }else{
+                    http_response_code(403);
+                    echo json_encode(["message" => "Invalid token"]);
+                    die();
                 }
 
 
