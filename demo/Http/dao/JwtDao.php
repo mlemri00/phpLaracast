@@ -29,7 +29,9 @@ class JwtDao
     }
 
     public static function getLastId(){
-
+        $db=App::resolve(Database::class);
+        $lastId =$db->query("select id from token order by id desc limit 1")->get();
+        return $lastId;
     }
 
 }

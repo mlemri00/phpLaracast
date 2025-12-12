@@ -2,7 +2,9 @@
 
 namespace core\Middleware;
 
+use Cassandra\Date;
 use core\Jwt;
+use DateTimeImmutable;
 use Http\dao\JwtDao;
 
 class Auth
@@ -40,22 +42,31 @@ class Auth
 
         try {
             $userId = $this->jwt->decode($matches[1])['id']['id'];
+            $tokenId =$this->jwt->decode($matches[1])['tokenId'];
 
             $tokens = JwtDao::getAllTokens($userId);
-            foreach ($tokens as $token ){
-                /*
-                $t1 = $this->jwt->decode($token['token']);
-                $t2 = $this->jwt->decode($matches[1]);
 
-                $d=[$token,$matches,$t1,$t2];
-                dd($d);
-                $now =new \DateTimeImmutable('2025-10-22');
-                $tokenCreation = date_create($token['created_at']);
-                $s = [$now,$tokenCreation,$now->diff($tokenCreation)];
+            foreach ($tokens as $token){
+                $dbTokenId = $this->jwt->decode($token['token'])['tokenId'];
 
-                dd($s);
-                */
+                if ($tokenId==$dbTokenId){
+
+                    $dateNow = date_create();
+                    $tokenCreationDate = new DateTimeImmutable($token['created_at']);
+
+                    $minutes = $tokenCreationDate->diff($dateNow)->i;
+
+                    if ($minutes>=100){
+                        http_response_code(403);
+                        echo json_encode(["message" => "TokenExpired"]);
+                        die();
+
+                    }
+                }
+
+
             }
+
 
         } catch (InvalidSignatureException) {
 
