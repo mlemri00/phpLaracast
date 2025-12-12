@@ -22,7 +22,11 @@ class NotesController
 
 
     public function index($apiRequest = false){
-    $userId = $_SESSION['user']['id'] ?? Auth::getUserIdFromJwt();
+        $userId = $_SESSION['user']['id'] ;
+
+        if ($apiRequest){
+            $userId = Auth::getUserIdFromJwt();
+        }
     $notes = $this->noteDao->getAllNotes($userId);
     //REST index
 
@@ -47,7 +51,11 @@ class NotesController
 
     public function show($apiRequest = false){
 
-        $currentUserId = $_SESSION['user']['id']?? Auth::getUserIdFromJwt();
+        $currentUserId = $_SESSION['user']['id'] ;
+
+        if ($apiRequest){
+            $currentUserId = Auth::getUserIdFromJwt();
+        }
         $note = $this->noteDao->getNote($_GET['id'],$apiRequest);
 
 
@@ -67,7 +75,7 @@ class NotesController
 
 public function edit(){
 
-    $currentUserId = $_SESSION['user']['id']?? Auth::getUserIdFromJwt();
+    $currentUserId = $_SESSION['user']['id'];
 
     $note = $this->noteDao->getNote($_GET['id']);
 
@@ -87,7 +95,12 @@ public function edit(){
 
 public function delete($apiRequest= false){
 
-    $currentUserId = $_SESSION['user']['id'] ?? Auth::getUserIdFromJwt();
+    $currentUserId = $_SESSION['user']['id'] ;
+
+    if ($apiRequest){
+        $currentUserId = Auth::getUserIdFromJwt();
+    }
+
     $noteID =$_POST['id'] ?? $_GET['id'];
 
     $note = $this->noteDao->getNote($noteID,$apiRequest);
@@ -121,8 +134,11 @@ public function store($apiRequest=false){
     $errors =[];
 
     $body = $_POST['body'];
-    $userId = $_SESSION['user']['id'] ?? Auth::getUserIdFromJwt();
+    $userId = $_SESSION['user']['id'] ;
 
+    if ($apiRequest){
+        $userId = Auth::getUserIdFromJwt();
+    }
 
     if (!Validator::string($body,1,1000)){
         $errors['body']='A body of no more than 1000 characters,  is required';
@@ -168,7 +184,11 @@ public function update($apiRequest = false){
     $db = App::resolve(Database::class);
 
 
-    $currentUserId = $_SESSION['user']['id'] ?? Auth::getUserIdFromJwt();
+    $currentUserId = $_SESSION['user']['id'] ;
+
+    if ($apiRequest){
+        $currentUserId = Auth::getUserIdFromJwt();
+    }
     $noteId = $_POST['id'] ?? $_GET['id'];
 
     $note = $db -> query('select * from notes where id = :id',[
