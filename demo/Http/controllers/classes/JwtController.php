@@ -21,6 +21,9 @@ class JwtController{
 
         $email = $_POST['email'];
         $password = $_POST['password'];
+        $phoneNumber = $_POST['phone'];
+        $username = $_POST['username'];
+
         $db = App::resolve(Database::class);
 
         if (!Validator::email($email)){
@@ -50,9 +53,11 @@ class JwtController{
             echo json_encode(["message"=>"User exists"]);
             die();
         }else{
-            $db->query('insert into users(email,password) values (:email, :password)',[
+            $db->query('insert into users(email,password,phone,username) values (:email, :password, :phone,:username)',[
                 'email'=>$email,
-                'password'=>password_hash($password,PASSWORD_BCRYPT)
+                'password'=>password_hash($password,PASSWORD_BCRYPT),
+                'phone'=>$phoneNumber,
+                'username'=>$username
             ]);
             $id = $db->query('select id from users where email = :email',
                 ['email'=>$email])->find();
