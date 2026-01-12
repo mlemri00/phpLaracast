@@ -1,13 +1,13 @@
 <?php
 
-namespace Http\dao;
+namespace Http\dao\dao;
 
 use App;
 use core\Database;
 use Http\dao\interfaces\INoteDao;
 use Http\models\Note;
 
-class NoteDao implements INoteDao
+class NoteDaoDbImpl implements INoteDao
 {
 
 

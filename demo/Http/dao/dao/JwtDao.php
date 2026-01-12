@@ -1,6 +1,6 @@
 <?php
 
-namespace Http\dao;
+namespace Http\dao\dao;
 
 use App;
 use core\Database;

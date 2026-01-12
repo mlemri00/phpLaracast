@@ -1,6 +1,6 @@
 <?php
 
-namespace Http\controllers\classes;
+namespace Http\controllers;
 
 use App;
 use core\Authenticator;
@@ -8,7 +8,7 @@ use core\Database;
 use core\Jwt;
 use core\Middleware\Auth;
 use core\Validator;
-use Http\dao\JwtDao;
+use Http\dao\dao\JwtDao;
 use Http\Forms\LoginForm;
 
 class JwtController{

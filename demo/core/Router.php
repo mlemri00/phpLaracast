@@ -1,13 +1,11 @@
 <?php
 namespace core;
 use core\Middleware\Middleware;
-use Http\controllers\classes\JwtController;
-use Http\controllers\classes\NotesController;
 
 class Router{
 
     protected $routes =[];
-    public function add($method,$uri,$controller,$controllerMethod=null){
+    public function add($method,$uri,$controller,$controllerMethod = null){
         $this->routes[]=[
             'uri'=>$uri,
             'controller'=>$controller,
@@ -18,27 +16,27 @@ class Router{
         return $this;
     }
 
-    public function get($uri,$controller){
-        return $this->add("GET",$uri,$controller);
+    public function get($uri,$controller,$controllerMethod = null){
+        return $this->add("GET",$uri,$controller,$controllerMethod);
     }
 
-    public function post($uri,$controller ){
-        return $this->add("POST",$uri,$controller);
-
-    }
-
-    public function delete($uri,$controller){
-        return $this->add("DELETE",$uri,$controller);
+    public function post($uri,$controller,$controllerMethod = null){
+        return $this->add("POST",$uri,$controller,$controllerMethod);
 
     }
 
-    public function patch($uri,$controller){
-        return $this->add("PATCH",$uri,$controller);
+    public function delete($uri,$controller,$controllerMethod = null){
+        return $this->add("DELETE",$uri,$controller,$controllerMethod);
 
     }
 
-    public function put($uri,$controller){
-        return $this->add("GET",$uri,$controller);
+    public function patch($uri,$controller, $controllerMethod = null){
+        return $this->add("PATCH",$uri,$controller, $controllerMethod);
+
+    }
+
+    public function put($uri,$controller, $controllerMethod = null){
+        return $this->add("GET",$uri,$controller, $controllerMethod);
 
     }
     public function only($key){

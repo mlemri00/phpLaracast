@@ -2,10 +2,9 @@
 
 namespace core\Middleware;
 
-use Cassandra\Date;
 use core\Jwt;
 use DateTimeImmutable;
-use Http\dao\JwtDao;
+use Http\dao\dao\JwtDao;
 
 class Auth
 {

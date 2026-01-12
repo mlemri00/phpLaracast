@@ -1,19 +1,19 @@
 <?php
 
-namespace Http\controllers\classes;
+namespace Http\controllers;
 
 use App;
 use core\Database;
 use core\Middleware\Auth;
 use core\Validator;
-use Http\dao\NoteDao;
+use Http\dao\dao\NoteDaoDbImpl;
 
 class NotesController
 {
     private $noteDao;
     public function __construct()
     {
-    $this->noteDao=new NoteDao();
+    $this->noteDao=new NoteDaoDbImpl();
     }
 
 
