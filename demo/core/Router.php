@@ -5,21 +5,14 @@ use Http\controllers\classes\JwtController;
 use Http\controllers\classes\NotesController;
 
 class Router{
-    protected $classes;
-    public function __construct()
-    {   //Aqui posam totes les classes que volem implementar al controller
-        $this->classes=[
-          'notes'=>new NotesController(),
-          'jwtAuth'=>new JwtController()
-        ];
-    }
 
     protected $routes =[];
-    public function add($method,$uri,$controller){
+    public function add($method,$uri,$controller,$controllerMethod=null){
         $this->routes[]=[
             'uri'=>$uri,
             'controller'=>$controller,
             'method'=>$method,
+            'controllerMethod'=>$controllerMethod,
             'middleware'=>null,
         ];
         return $this;
@@ -54,28 +47,17 @@ class Router{
     }
 
     public function route($uri,$method){
-        $apiRequest = false;
+        $controllers = 'Http/controllers/';
 
         foreach ($this->routes as $route){
-            if (str_contains($uri,"api/")){
-                $uri = str_replace("api/","",$uri);
-                $apiRequest=true;
 
-            }
             if ($route['uri']===$uri && $route['method']=== strtoupper($method)){
-                Middleware::resolve($route['middleware'],$apiRequest);
-
-                 if (str_contains($route['controller'], "@")){
-
-                     $function = explode("@",$route['controller'],2);
-
-                     foreach(array_keys($this->classes) as $classKey){
-                         if ($function[0]===$classKey){
-                            [$this->classes[$classKey],$function[1]]($apiRequest);
-                         }
-                     }
+                Middleware::resolve($route['middleware']);
+                 if (!$route['controllerMethod']){
+                     return require base_path($controllers . $route['controller']);
                  }else {
-                     return require base_path('Http/controllers/' . $route['controller']);
+                     return (new ($controllers . $route['controller']))->{$route['controllerMethod']}();
+
                  }
             }
         }
