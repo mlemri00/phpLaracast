@@ -5,7 +5,7 @@ namespace Http\dao\dao;
 use App;
 use core\Database;
 
-class JwtDao
+class UsersDao
 {
 
     public static function storeToken($token, $userId){

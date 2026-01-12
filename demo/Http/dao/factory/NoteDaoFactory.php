@@ -2,13 +2,13 @@
 
 namespace Http\dao\factory;
 
-use Http\dao\dao\NoteDaoDbImpl;
+use Http\dao\dao\NoteDaoDb;
 
 class NoteDaoFactory
 {
 
-    public function build() {
-        return new NoteDaoDbImpl();
+    public static function build() {
+        return new NoteDaoDb();
     }
 
 }

@@ -7,7 +7,7 @@ use core\Database;
 use Http\dao\interfaces\INoteDao;
 use Http\models\Note;
 
-class NoteDaoDbImpl implements INoteDao
+class NoteDaoDb implements INoteDao
 {
 
 

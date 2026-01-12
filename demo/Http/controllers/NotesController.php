@@ -6,14 +6,15 @@ use App;
 use core\Database;
 use core\Middleware\Auth;
 use core\Validator;
-use Http\dao\dao\NoteDaoDbImpl;
+use Http\dao\dao\NoteDaoDb;
+use Http\dao\factory\NoteDaoFactory;
 
 class NotesController
 {
-    private $noteDao;
+    private NoteDaoDb $repository;
     public function __construct()
     {
-    $this->noteDao=new NoteDaoDbImpl();
+    $this->repository = NoteDaoFactory::build();
     }
 
 
@@ -27,7 +28,7 @@ class NotesController
         if ($apiRequest){
             $userId = Auth::getUserIdFromJwt();
         }
-    $notes = $this->noteDao->getAllNotes($userId);
+    $notes = $this->repository->getAllNotes($userId);
     //REST index
 
     if ($apiRequest){
@@ -56,7 +57,7 @@ class NotesController
         if ($apiRequest){
             $currentUserId = Auth::getUserIdFromJwt();
         }
-        $note = $this->noteDao->getNote($_GET['id'],$apiRequest);
+        $note = $this->repository->getNote($_GET['id'],$apiRequest);
 
 
         authorize($note->getUserId() == $currentUserId,$apiRequest);
@@ -77,7 +78,7 @@ public function edit(){
 
     $currentUserId = $_SESSION['user']['id'];
 
-    $note = $this->noteDao->getNote($_GET['id']);
+    $note = $this->repository->getNote($_GET['id']);
 
     authorize($note->getUserId() == $currentUserId);
 
@@ -103,11 +104,11 @@ public function delete($apiRequest= false){
 
     $noteID =$_POST['id'] ?? $_GET['id'];
 
-    $note = $this->noteDao->getNote($noteID,$apiRequest);
+    $note = $this->repository->getNote($noteID,$apiRequest);
 
     authorize($note->getUserId()===$currentUserId,$apiRequest);
 
-    $this->noteDao->deleteNote($noteID);
+    $this->repository->deleteNote($noteID);
 
     if ($apiRequest){
         header('location: /api/notes');
@@ -162,7 +163,7 @@ public function store($apiRequest=false){
 
     }
 
-    $this->noteDao->createNote($body,$userId);
+    $this->repository->createNote($body,$userId);
 
     if ($apiRequest){
         header('location: /api/notes');

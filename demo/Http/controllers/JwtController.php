@@ -8,7 +8,7 @@ use core\Database;
 use core\Jwt;
 use core\Middleware\Auth;
 use core\Validator;
-use Http\dao\dao\JwtDao;
+use Http\dao\dao\UsersDao;
 use Http\Forms\LoginForm;
 
 class JwtController{
@@ -62,7 +62,7 @@ class JwtController{
             $id = $db->query('select id from users where email = :email',
                 ['email'=>$email])->find();
 
-            $lastTokenId =JwtDao::getLastId()[0]['id'];
+            $lastTokenId =UsersDao::getLastId()[0]['id'];
             $payload = [
                 "id" => $id,
                 "tokenId"=>$lastTokenId+1
@@ -70,7 +70,7 @@ class JwtController{
 
             $token =  $this->jwt->encode($payload);
 
-            JwtDao::storeToken($token,$id['id']);
+            UsersDao::storeToken($token,$id['id']);
 
             header('Content-Type: application/json');
             echo json_encode(["token"=>$token]);
@@ -93,7 +93,7 @@ class JwtController{
                 $id = $db->query('select id from users where email = :email',
                     ['email'=>$email])->find();
 
-                $lastTokenId =JwtDao::getLastId()[0]['id'];
+                $lastTokenId =UsersDao::getLastId()[0]['id'];
 
                 $payload = [
                     "id" => $id,
@@ -103,7 +103,7 @@ class JwtController{
                 $token =  $this->jwt->encode($payload);
                 $payload = $this->jwt->decode($token);
 
-                JwtDao::storeToken($token,$id['id']);
+                UsersDao::storeToken($token,$id['id']);
 
                 header('Content-Type: application/json');
                 echo json_encode(["token"=>$token,
@@ -129,13 +129,13 @@ class JwtController{
 
         $tokenId = $_POST['id'] ?? $_GET['id'];
 
-        $token = JwtDao::getToken($tokenId);
+        $token = UsersDao::getToken($tokenId);
 
         $tokenUserId = $this->jwt->decode($token['token'])['id']['id'];
         if ($userId!=$tokenUserId) {
             abort(true,403);
         }
-        JwtDao::deleteToken($tokenId);
+        UsersDao::deleteToken($tokenId);
         header('Content-Type: application/json');
         echo json_encode(["message"=>"Token deleted"]);
         die();
@@ -143,7 +143,7 @@ class JwtController{
     public function deleteAllTokens(){
         $userId = Auth::getUserIdFromJwt();
 
-        JwtDao::deleteAllTokens($userId);
+        UsersDao::deleteAllTokens($userId);
 
         header('Content-Type: application/json');
         echo json_encode(["message"=>"Tokens deleted"]);

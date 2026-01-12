@@ -4,7 +4,7 @@ namespace core\Middleware;
 
 use core\Jwt;
 use DateTimeImmutable;
-use Http\dao\dao\JwtDao;
+use Http\dao\dao\UsersDao;
 
 class Auth
 {
@@ -43,7 +43,7 @@ class Auth
             $userId = $this->jwt->decode($matches[1])['id']['id'];
             $tokenId =$this->jwt->decode($matches[1])['tokenId'];
 
-            $tokens = JwtDao::getAllTokens($userId);
+            $tokens = UsersDao::getAllTokens($userId);
 
             if ($tokens==null){
                 http_response_code(403);
