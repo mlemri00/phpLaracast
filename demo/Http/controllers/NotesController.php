@@ -12,225 +12,147 @@ use Http\dao\factory\NoteDaoFactory;
 class NotesController
 {
     private NoteDaoDb $repository;
+
     public function __construct()
     {
-    $this->repository = NoteDaoFactory::build();
+        $this->repository = NoteDaoFactory::build();
     }
 
 
+    public function index()
+    {
+        $userId = $_SESSION['user']['id'];
 
+        $notes = $this->repository->getAllNotes($userId);
 
-
-
-    public function index($apiRequest = false){
-        $userId = $_SESSION['user']['id'] ;
-
-        if ($apiRequest){
-            $userId = Auth::getUserIdFromJwt();
-        }
-    $notes = $this->repository->getAllNotes($userId);
-    //REST index
-
-    if ($apiRequest){
-        header('Content-Type: application/json');
-        echo json_encode(["notes" =>$notes]);
-        die();
-
-    }else {
         view("notes/index.view.php",
             ["heading" => "Notes"
                 , "notes" => $notes]);
-    }
-}
 
-
-
-
-
-
-
-
-    public function show($apiRequest = false){
-
-        $currentUserId = $_SESSION['user']['id'] ;
-
-        if ($apiRequest){
-            $currentUserId = Auth::getUserIdFromJwt();
-        }
-        $note = $this->repository->getNote($_GET['id'],$apiRequest);
-
-
-        authorize($note->getUserId() == $currentUserId,$apiRequest);
-
-
-        if ($apiRequest){
-            header('Content-Type: application/json');
-            echo json_encode(["note" =>$note]);
-            die();
-        }else {
-            view("notes/show.view.php",
-                ["heading" => "Note"
-                    , "note" => $note]);
-        }
-}
-
-public function edit(){
-
-    $currentUserId = $_SESSION['user']['id'];
-
-    $note = $this->repository->getNote($_GET['id']);
-
-    authorize($note->getUserId() == $currentUserId);
-
-    view("notes/edit.view.php",[
-        'heading'=>'Edit Note',
-        'errors'=>[],
-        'note'=>$note
-    ]);
-}
-
-
-
-
-
-
-public function delete($apiRequest= false){
-
-    $currentUserId = $_SESSION['user']['id'] ;
-
-    if ($apiRequest){
-        $currentUserId = Auth::getUserIdFromJwt();
     }
 
-    $noteID =$_POST['id'] ?? $_GET['id'];
 
-    $note = $this->repository->getNote($noteID,$apiRequest);
+    public function show()
+    {
+        $currentUserId = $_SESSION['user']['id'];
+        $note = $this->repository->getNote($_GET['id']);
 
-    authorize($note->getUserId()===$currentUserId,$apiRequest);
+        authorize($note->getUserId() == $currentUserId);
 
-    $this->repository->deleteNote($noteID);
+        view("notes/show.view.php",
+            ["heading" => "Note"
+                , "note" => $note]);
 
-    if ($apiRequest){
-        header('location: /api/notes');
-        die();
-    }else{
+    }
+
+    public function edit()
+    {
+
+        $currentUserId = $_SESSION['user']['id'];
+
+        $note = $this->repository->getNote($_GET['id']);
+
+        authorize($note->getUserId() == $currentUserId);
+
+        view("notes/edit.view.php", [
+            'heading' => 'Edit Note',
+            'errors' => [],
+            'note' => $note
+        ]);
+    }
+
+
+    public function delete()
+    {
+
+        $currentUserId = $_SESSION['user']['id'];
+
+        $noteID = $_POST['id'] ?? $_GET['id'];
+
+        $note = $this->repository->getNote($noteID);
+
+        authorize($note->getUserId() === $currentUserId);
+
+        $this->repository->deleteNote($noteID);
+
         header('location: /notes');
-    }
-    exit();
+        exit();
 
-}
-
-
-
-
-public function create(){
-    view("notes/create.view.php",
-        ["heading"=>"Create note"
-            ,"errors"=>[]]);
-}
-
-
-
-public function store($apiRequest=false){
-    $errors =[];
-
-    $body = $_POST['body'];
-    $userId = $_SESSION['user']['id'] ;
-
-    if ($apiRequest){
-        $userId = Auth::getUserIdFromJwt();
     }
 
-    if (!Validator::string($body,1,1000)){
-        $errors['body']='A body of no more than 1000 characters,  is required';
+
+    public function create()
+    {
+        view("notes/create.view.php",
+            ["heading" => "Create note"
+                , "errors" => []]);
     }
 
-    if (!empty($errors)){
 
+    public function store()
+    {
+        $errors = [];
 
-        if ($apiRequest){
-            header('Content-Type: application/json');
-            echo json_encode(["message"=>$errors]);
-            die();
+        $body = $_POST['body'];
+        $userId = $_SESSION['user']['id'];
 
-        }else {
+        if (!Validator::string($body, 1, 1000)) {
+            $errors['body'] = 'A body of no more than 1000 characters,  is required';
+        }
+
+        if (!empty($errors)) {
+
             return view("notes/create.view.php", [
                 'heading' => 'Create Note',
                 'errors' => $errors
             ]);
+
+
+        }
+
+        $this->repository->createNote($body, $userId);
+
+        header('location: /notes');
+        die();
+
+
+    }
+
+    public function update()
+    {
+
+
+        $currentUserId = $_SESSION['user']['id'];
+
+        $noteId = $_POST['id'] ?? $_GET['id'];
+
+        $note = $this->repository->getNote($noteId);
+
+
+        authorize($note['user_id'] === $currentUserId);
+
+        $errors = [];
+
+        if (!Validator::string($_POST['body'] ?? $_GET['body'], 1, 1000)) {
+            $errors['body'] = 'A body of no more than 1000 characters,  is required';
         }
 
 
-    }
+        if (count($errors)) {
 
-    $this->repository->createNote($body,$userId);
+            return view('notes/edit.view.php', [
+                'heading' => 'Edit Note',
+                'errors' => $errors,
+                'note' => $note
+            ]);
 
-    if ($apiRequest){
-        header('location: /api/notes');
-        die();
-    }else {
+        }
+
+        $this->repository->updateNote($noteId, $_POST['body']);
         header('location: /notes');
         die();
+
     }
-
-
-
-}
-
-public function update($apiRequest = false){
-    $db = App::resolve(Database::class);
-
-
-    $currentUserId = $_SESSION['user']['id'] ;
-
-    if ($apiRequest){
-        $currentUserId = Auth::getUserIdFromJwt();
-    }
-    $noteId = $_POST['id'] ?? $_GET['id'];
-
-    $note = $db -> query('select * from notes where id = :id',[
-        'id'=>$noteId
-    ])->findOrFail($apiRequest);
-
-
-    authorize($note['user_id']===$currentUserId,$apiRequest);
-
-    $errors = [];
-
-    if (!Validator::string($_POST['body'] ?? $_GET['body'],1,1000)){
-        $errors['body']='A body of no more than 1000 characters,  is required';
-    }
-
-
-    if (count($errors)){
-        if ($apiRequest) {
-            header('Content-Type: application/json');
-            echo json_encode(["message" => $errors]);
-            die();
-        }else{
-                return view('notes/edit.view.php', [
-                    'heading' => 'Edit Note',
-                    'errors' => $errors,
-                    'note' => $note
-                ]);
-            }
-    }
-
-    $db -> query('update notes set body = :body where id = :id',[
-
-        'body' => $_POST['body'] ?? $_GET['body']
-        , 'id'=>$noteId
-    ]);
-
-    if ($apiRequest){
-        header('location: /api/notes');
-        die();
-    }else {
-        header('location: /notes');
-        die();
-    }
-}
-
 
 
 }
