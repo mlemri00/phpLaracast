@@ -10,41 +10,6 @@ class UsersDaoDb implements IUsersDao
 {
 
 
-
-
-
-    public static function getLastId(){
-        $db=App::resolve(Database::class);
-        $lastId =$db->query("select id from token order by id desc limit 1")->get();
-        return $lastId;
-    }
-
-    public static function deleteToken($tokenId)
-    {
-
-        $db=App::resolve(Database::class);
-
-        $db->query('delete from token where id = :id',[
-            'id'=>$tokenId
-        ]);
-
-    }
-    public static function deleteAllTokens($userId){
-        $db=App::resolve(Database::class);
-
-        $db->query('delete from token where user_id = :id',[
-            'id'=>$userId
-        ]);
-    }
-
-    public static function getToken($tokenId){
-        $db=App::resolve(Database::class);
-        $token = $db->query('select * from token where id = :id', [
-            'id' => $tokenId
-        ])->findOrFail(true);
-        return $token;
-    }
-
     public function findUserByEmail($email){
         $db=App::resolve(Database::class);
         $user= $db->query('select * from users where email = :email',[
