@@ -4,8 +4,9 @@ namespace Http\dao\dao;
 
 use App;
 use core\Database;
+use Http\dao\interfaces\IUsersDao;
 
-class UsersDaoDb
+class UsersDaoDb implements IUsersDao
 {
 
     public static function storeToken($token, $userId){
@@ -84,6 +85,8 @@ class UsersDaoDb
             ['email'=>$email])->find();
         return $id;
     }
+
+
 
 
 
