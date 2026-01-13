@@ -51,7 +51,7 @@ class NotesRestController
 
     }
 
-    public function store($apiRequest = false)
+    public function store()
     {
 
         $body = $_POST['body'];
@@ -67,30 +67,20 @@ class NotesRestController
         die();
     }
 
-    public function update($apiRequest = false)
+    public function update()
     {
         $currentUserId = Auth::getUserIdFromJwt();
         $noteId = $_POST['id'] ?? $_GET['id'];
 
-        $note = $this->repository->getNote($noteId);
+        $body =  $_POST['body'];
 
-        authorize($note['user_id'] === $currentUserId, $apiRequest);
+        $errors = $this->service->updateNote($body,$noteId);
 
-        $errors = [];
-
-        if (!Validator::string($_POST['body'] ?? $_GET['body'], 1, 1000)) {
-            $errors['body'] = 'A body of no more than 1000 characters,  is required';
-        }
-
-
-        if (count($errors)) {
+        if (empty($errors)) {
             header('Content-Type: application/json');
             echo json_encode(["message" => $errors]);
             die();
-
         }
-
-        $this->repository->updateNote($noteId, $_POST['body']);
 
         header('location: /api/notes');
         die();

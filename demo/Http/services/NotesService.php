@@ -58,9 +58,30 @@ public function createNote($body){
 
     $this->repository->createNote($body, $userId);
 
-
 }
 
+public function updateNote($body,$noteId){
+
+    $currentUserId = Auth::getUserIdFromJwt();
+
+    $note = $this->repository->getNote($noteId);
+
+    authorize($note['user_id'] === $currentUserId);
+
+    $errors = [];
+
+    if (!Validator::string($body, 1, 1000)) {
+        $errors['body'] = 'A body of no more than 1000 characters,  is required';
+    }
+
+
+    if (count($errors)) {
+        return $errors;
+    }
+
+    $this->repository->updateNote($noteId, $_POST['body']);
+
+}
 
 
 
