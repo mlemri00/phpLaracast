@@ -10,12 +10,11 @@ use Http\services\NotesService;
 
 class NotesRestController
 {
-    private NoteDaoDb $repository;
     private NotesService $service;
+
     public function __construct()
     {
-        $this->repository = NoteDaoFactory::build();
-        $this->service =  new NotesService();
+        $this->service = new NotesService();
     }
 
     public function index()
@@ -58,8 +57,8 @@ class NotesRestController
         $currentUserId = Auth::getUserIdFromJwt();
         $body = $_POST['body'];
 
-        $errors = $this->service->createNote($body,$currentUserId);
-        if(!empty($errors)){
+        $errors = $this->service->createNote($body, $currentUserId);
+        if (!empty($errors)) {
             header('Content-Type: application/json');
             echo json_encode(["message" => $errors]);
             die();
@@ -74,9 +73,9 @@ class NotesRestController
         $currentUserId = Auth::getUserIdFromJwt();
         $noteId = $_POST['id'] ?? $_GET['id'];
 
-        $body =  $_POST['body'];
+        $body = $_POST['body'];
 
-        $errors = $this->service->updateNote($body,$noteId,$currentUserId);
+        $errors = $this->service->updateNote($body, $noteId, $currentUserId);
 
         if (empty($errors)) {
             header('Content-Type: application/json');
