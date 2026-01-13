@@ -38,17 +38,12 @@ class NotesRestController
 
     }
 
-    public function delete($apiRequest = false)
+    public function delete()
     {
-        $currentUserId = Auth::getUserIdFromJwt();
 
         $noteID = $_POST['id'] ?? $_GET['id'];
 
-        $note = $this->repository->getNote($noteID, $apiRequest);
-
-        authorize($note->getUserId() === $currentUserId, $apiRequest);
-
-        $this->repository->deleteNote($noteID);
+        $this->service->deleteNote($noteID);
 
         header('location: /api/notes');
         die();
@@ -58,24 +53,15 @@ class NotesRestController
 
     public function store($apiRequest = false)
     {
-        $errors = [];
 
         $body = $_POST['body'];
 
-        $userId = Auth::getUserIdFromJwt();
-
-
-        if (!Validator::string($body, 1, 1000)) {
-            $errors['body'] = 'A body of no more than 1000 characters,  is required';
-        }
-
-        if (!empty($errors)) {
+        $errors = $this->service->createNote($body);
+        if(!empty($errors)){
             header('Content-Type: application/json');
             echo json_encode(["message" => $errors]);
             die();
         }
-
-        $this->repository->createNote($body, $userId);
 
         header('location: /api/notes');
         die();
