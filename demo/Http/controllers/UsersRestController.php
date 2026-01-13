@@ -46,11 +46,8 @@ class UsersRestController{
             ]);
             $id = $db->query('select id from users where email = :email',
                 ['email'=>$email])->find();
-
-            $lastTokenId =UsersDaoDb::getLastId()[0]['id'];
             $payload = [
-                "id" => $id,
-                "tokenId"=>$lastTokenId+1
+                "id" => $id
             ];
 
             $token =  $this->jwt->encode($payload);
