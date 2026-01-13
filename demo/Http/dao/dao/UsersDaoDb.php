@@ -18,7 +18,7 @@ class UsersDaoDb implements IUsersDao
         return $user;
     }
 
-    public function registerUser($email,$password,$phone, $username){
+    public function registerUser($email,$password,$phone = null, $username = null){
         $db=App::resolve(Database::class);
         $db->query('insert into users(email,password,phone,username) values (:email, :password, :phone,:username)',[
             'email'=>$email,

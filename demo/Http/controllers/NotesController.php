@@ -14,9 +14,10 @@ class NotesController
 {
     private NoteDaoDb $repository;
     private NotesService $service;
+
     public function __construct()
     {
-        $this->service =  new NotesService();
+        $this->service = new NotesService();
         $this->repository = NoteDaoFactory::build();
     }
 
@@ -37,9 +38,9 @@ class NotesController
     public function show()
     {
         $currentUserId = $_SESSION['user']['id'];
-        $noteId =  $_GET['id'];
+        $noteId = $_GET['id'];
 
-        $note = $this->service->getNote($noteId,$currentUserId);
+        $note = $this->service->getNote($noteId, $currentUserId);
 
         view("notes/show.view.php",
             ["heading" => "Note"
@@ -54,7 +55,7 @@ class NotesController
 
         $noteId = $_GET['id'];
 
-        $note = $this->service->getNote($noteId,$currentUserId);
+        $note = $this->service->getNote($noteId, $currentUserId);
 
         view("notes/edit.view.php", [
             'heading' => 'Edit Note',
@@ -71,7 +72,7 @@ class NotesController
 
         $noteId = $_GET['id'];
 
-        $this->service->deleteNote($noteId,$currentUserId);
+        $this->service->deleteNote($noteId, $currentUserId);
 
         header('location: /notes');
         exit();
@@ -92,7 +93,7 @@ class NotesController
         $body = $_POST['body'];
         $userId = $_SESSION['user']['id'];
 
-       $errors = $this->service->createNote($body, $userId);
+        $errors = $this->service->createNote($body, $userId);
 
         if (!empty($errors)) {
             return view("notes/create.view.php", [
@@ -118,12 +119,11 @@ class NotesController
 
         $body = $_POST['body'];
 
-        $errors = $this->service->updateNote($noteId, $body,$currentUserId);
+        $errors = $this->service->updateNote($noteId, $body, $currentUserId);
 
         if (empty($errors)) {
 
-            $note = $this->service->getNote($noteId,$currentUserId);
-
+            $note = $this->service->getNote($noteId, $currentUserId);
 
             return view('notes/edit.view.php', [
                 'heading' => 'Edit Note',
