@@ -15,25 +15,32 @@ class NotesRestController
     }
 
     public function index($apiRequest = false){
-        $userId = $_SESSION['user']['id'] ;
+        $userId = Auth::getUserIdFromJwt();
 
-        if ($apiRequest){
-            $userId = Auth::getUserIdFromJwt();
-        }
         $notes = $this->repository->getAllNotes($userId);
-        //REST index
 
-        if ($apiRequest){
-            header('Content-Type: application/json');
-            echo json_encode(["notes" =>$notes]);
-            die();
 
-        }else {
-            view("notes/index.view.php",
-                ["heading" => "Notes"
-                    , "notes" => $notes]);
-        }
+        header('Content-Type: application/json');
+        echo json_encode(["notes" =>$notes]);
+        die();
     }
+
+    public function show($apiRequest = false){
+        $currentUserId = Auth::getUserIdFromJwt();
+
+        $note = $this->repository->getNote($_GET['id'],$apiRequest);
+
+
+        authorize($note->getUserId() == $currentUserId,$apiRequest);
+
+        header('Content-Type: application/json');
+        echo json_encode(["note" =>$note]);
+        die();
+
+    }
+
+
+
 
 
 }
