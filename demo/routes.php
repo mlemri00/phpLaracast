@@ -40,5 +40,4 @@ $router->get('/api/note', 'NotesRestController', 'show');
 $router->patch('/api/note/edit', 'NotesRestController', 'edit');
 $router->delete('/api/note', 'NotesRestController', 'delete');
 
-////TEST TEST TEST TEST
 
