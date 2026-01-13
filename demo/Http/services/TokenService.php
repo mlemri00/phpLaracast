@@ -16,16 +16,29 @@ class TokenService
         $this->jwt = new Jwt();
     }
 
-    public function generateToken($id){
+    public function generateToken($userId){
         $payload = [
-            'id'=>$id
+            'id'=>$$userId
         ];
-        $token = $this->jwt->encode($id);
+        $token = $this->jwt->encode($payload);
 
+        $this->repository->storeToken($token,$userId);
 
+        return $token;
+    }
 
+    public function storeToken(){
+
+    }
+    public function getAllTokens(){
+
+    }
+    public function deleteToken(){
 
     }
 
+    public function deleteAllTokens(){
+
+    }
 
 }

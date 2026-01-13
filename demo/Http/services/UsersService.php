@@ -16,38 +16,30 @@ class UsersService
 
 
     private $userRepository;
-    private $tokenRepository;
-    private $jwt;
+    private $tokenService;
 
     public function __construct()
     {
         $this->userRepository = UsersDaoFactory::build();
-        $this->tokenRepository = TokenDaoFactory::build();
-        $this->jwt=new Jwt();
+        $this->tokenService = new TokenService();
     }
 
     public function storeUser($email, $password,$phone,$username)
     {
         $errors = [];
-        if (!Validator::email($email)) {
-            $errors['email'] = 'Please provide a valid email address';
+        $form = new LoginForm();
+        if (!$form->validate($email,$password)) {
+            $user = $this->findUser($email);
 
+            if (!empty($user)) {
+                $errors['user'] = 'User already exists please login';
+            }
+
+            if (!empty($errors)) {
+                return $errors;
+            }
+            $this->userRepository->registerUser($email, $password, $phone, $username);
         }
-
-        if (!Validator::string($password, 7, 255)) {
-            $errors['password'] = 'Please provide a password of at least seven characters';
-        }
-        $user = $this->findUser($email);
-
-        if (!empty($user)){
-            $errors['user'] = 'User already exists please login';
-        }
-
-        if (!empty($errors)) {
-            return $errors;
-        }
-        $this->userRepository->registerUser($email, $password,$phone,$username);
-
     }
 
     public function findUser($email){
@@ -58,31 +50,20 @@ class UsersService
 
     public function authenticateUser($email, $password)
     {
-        $form = new LoginForm();
+        $errors = [];
 
+        $form = new LoginForm();
         if ($form->validate($email, $password)) {
-            if ((new Authenticator)->attempt($email, $password)) {
+            if ((new Authenticator)->attempt($email, $password,false)) {
 
                 $id = $this->userRepository->getUserIdByEmail($email);
+                $token = $this->tokenService->generateToken($id);
 
-                $payload = [
-                    "id" => $id,
-                ];
+                return $token;
 
-                $token = $this->jwt->encode($payload);
-                $payload = $this->jwt->decode($token);
-
-                UsersDaoDb::storeToken($token, $id['id']);
-
-                header('Content-Type: application/json');
-                echo json_encode(["token" => $token,
-                    "payload" => $payload]);
-                die();
-
-            } else {
-                header('Content-Type: application/json');
-                echo json_encode(["message" => "No account matches that user or password"]);
-                die();
+            } else{
+                $errors['error'] = "No account matches that user or password";
+                return $errors;
             }
 
 

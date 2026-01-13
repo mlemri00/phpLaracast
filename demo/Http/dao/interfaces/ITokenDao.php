@@ -4,17 +4,17 @@ namespace Http\dao\interfaces;
 
 interface ITokenDao
 {
-    public static function storeToken($token, $userId);
+    public  function storeToken($token, $userId);
 
-    public static function getAllTokens($userId);
+    public  function getAllTokens($userId);
 
-    public static function getLastId();
+    public  function getLastId();
 
-    public static function deleteToken($tokenId);
+    public  function deleteToken($tokenId);
 
-    public static function deleteAllTokens($userId);
+    public  function deleteAllTokens($userId);
 
-    public static function getToken($tokenId);
+    public  function getToken($tokenId);
 
 
 
