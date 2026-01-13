@@ -6,36 +6,31 @@ use core\Middleware\Auth;
 use core\Validator;
 use Http\dao\dao\NoteDaoDb;
 use Http\dao\factory\NoteDaoFactory;
+use Http\services\NotesService;
 
 class NotesRestController
 {
     private NoteDaoDb $repository;
-
+    private NotesService $service;
     public function __construct()
     {
         $this->repository = NoteDaoFactory::build();
+        $this->service =  new NotesService();
     }
 
-    public function index($apiRequest = false)
+    public function index()
     {
-        $userId = Auth::getUserIdFromJwt();
-
-        $notes = $this->repository->getAllNotes($userId);
-
+        $notes = $this->service->getAllNotes();
 
         header('Content-Type: application/json');
         echo json_encode(["notes" => $notes]);
         die();
     }
 
-    public function show($apiRequest = false)
+    public function show()
     {
-        $currentUserId = Auth::getUserIdFromJwt();
-
-        $note = $this->repository->getNote($_GET['id'], $apiRequest);
-
-
-        authorize($note->getUserId() == $currentUserId, $apiRequest);
+        $noteId = $_GET['id'];
+        $note = $this->service->getNote($noteId);
 
         header('Content-Type: application/json');
         echo json_encode(["note" => $note]);
