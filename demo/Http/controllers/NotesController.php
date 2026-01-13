@@ -177,10 +177,6 @@ public function store($apiRequest=false){
 
 }
 
-
-
-
-
 public function update($apiRequest = false){
     $db = App::resolve(Database::class);
 
