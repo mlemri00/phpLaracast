@@ -4,8 +4,10 @@ namespace Http\services;
 
 use core\Authenticator;
 use core\Database;
+use core\Jwt;
 use core\Validator;
 use Http\dao\dao\UsersDaoDb;
+use Http\dao\factory\TokenDaoFactory;
 use Http\dao\factory\UsersDaoFactory;
 use Http\Forms\LoginForm;
 
@@ -13,14 +15,18 @@ class UsersService
 {
 
 
-    private $repository;
+    private $userRepository;
+    private $tokenRepository;
+    private $jwt;
 
     public function __construct()
     {
-        $this->repository = UsersDaoFactory::build();
+        $this->userRepository = UsersDaoFactory::build();
+        $this->tokenRepository = TokenDaoFactory::build();
+        $this->jwt=new Jwt();
     }
 
-    public function storeUser($email, $password)
+    public function storeUser($email, $password,$phone,$username)
     {
         $errors = [];
         if (!Validator::email($email)) {
@@ -31,40 +37,36 @@ class UsersService
         if (!Validator::string($password, 7, 255)) {
             $errors['password'] = 'Please provide a password of at least seven characters';
         }
+        $user = $this->findUser($email);
 
+        if (!empty($user)){
+            $errors['user'] = 'User already exists please login';
+        }
 
         if (!empty($errors)) {
             return $errors;
         }
-        $this->repository->registerUser($email, $password);
+        $this->userRepository->registerUser($email, $password,$phone,$username);
 
     }
 
     public function findUser($email){
-
+        $user = $this->userRepository->findUserByEmail($email);
+        return $user;
     }
 
 
     public function authenticateUser($email, $password)
     {
-        $db = App::resolve(Database::class);
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-
         $form = new LoginForm();
-
 
         if ($form->validate($email, $password)) {
             if ((new Authenticator)->attempt($email, $password)) {
 
-                $id = $db->query('select id from users where email = :email',
-                    ['email' => $email])->find();
-
-                $lastTokenId = UsersDaoDb::getLastId()[0]['id'];
+                $id = $this->userRepository->getUserIdByEmail($email);
 
                 $payload = [
                     "id" => $id,
-                    "tokenId" => $lastTokenId + 1
                 ];
 
                 $token = $this->jwt->encode($payload);

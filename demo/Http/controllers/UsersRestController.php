@@ -24,17 +24,6 @@ class UsersRestController{
         $phoneNumber = $_POST['phone'];
         $username = $_POST['username'];
 
-        $db = App::resolve(Database::class);
-
-        if (!Validator::email($email)){
-            $errors['email']='Please provide a valid email address';
-
-        }
-
-        if (!Validator::string($password,7,255)){
-            $errors['password']='Please provide a password of at least seven characters';
-        }
-
 
         if (! empty($errors)){
             header('Content-Type: application/json');
@@ -43,10 +32,6 @@ class UsersRestController{
         }
 
 
-
-        $user= $db->query('select * from users where email = :email',[
-            'email'=>$email
-        ])->find();
 
         if($user){
             header('Content-Type: application/json');

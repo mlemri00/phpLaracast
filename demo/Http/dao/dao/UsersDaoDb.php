@@ -32,7 +32,7 @@ class UsersDaoDb implements IUsersDao
         $db=App::resolve(Database::class);
         $id = $db->query('select id from users where email = :email',
             ['email'=>$email])->find();
-        return $id;
+        return $id['id'];
     }
 
 
