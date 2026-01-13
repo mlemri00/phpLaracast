@@ -3,8 +3,9 @@
 namespace Http\dao\dao;
 
 use core\Database;
+use Http\dao\interfaces\ITokenDao;
 
-class TokenDaoDb
+class TokenDaoDb implements ITokenDao
 {
     public static function storeToken($token, $userId){
         $db=App::resolve(Database::class);
