@@ -8,13 +8,15 @@ use core\Middleware\Auth;
 use core\Validator;
 use Http\dao\dao\NoteDaoDb;
 use Http\dao\factory\NoteDaoFactory;
+use Http\services\NotesService;
 
 class NotesController
 {
     private NoteDaoDb $repository;
-
+    private NotesService $service;
     public function __construct()
     {
+        $this->service =  new NotesService();
         $this->repository = NoteDaoFactory::build();
     }
 
@@ -23,7 +25,7 @@ class NotesController
     {
         $userId = $_SESSION['user']['id'];
 
-        $notes = $this->repository->getAllNotes($userId);
+        $notes = $this->service->getAllNotes($userId);
 
         view("notes/index.view.php",
             ["heading" => "Notes"
@@ -35,9 +37,9 @@ class NotesController
     public function show()
     {
         $currentUserId = $_SESSION['user']['id'];
-        $note = $this->repository->getNote($_GET['id']);
+        $noteId =  $_GET['id'];
 
-        authorize($note->getUserId() == $currentUserId);
+        $note = $this->service->getNote($noteId,$currentUserId);
 
         view("notes/show.view.php",
             ["heading" => "Note"
@@ -50,9 +52,9 @@ class NotesController
 
         $currentUserId = $_SESSION['user']['id'];
 
-        $note = $this->repository->getNote($_GET['id']);
+        $noteId = $_GET['id'];
 
-        authorize($note->getUserId() == $currentUserId);
+        $note = $this->service->getNote($noteId,$currentUserId);
 
         view("notes/edit.view.php", [
             'heading' => 'Edit Note',
@@ -67,13 +69,9 @@ class NotesController
 
         $currentUserId = $_SESSION['user']['id'];
 
-        $noteID = $_POST['id'] ?? $_GET['id'];
+        $noteId = $_GET['id'];
 
-        $note = $this->repository->getNote($noteID);
-
-        authorize($note->getUserId() === $currentUserId);
-
-        $this->repository->deleteNote($noteID);
+        $this->service->deleteNote($noteId,$currentUserId);
 
         header('location: /notes');
         exit();
@@ -91,17 +89,12 @@ class NotesController
 
     public function store()
     {
-        $errors = [];
-
         $body = $_POST['body'];
         $userId = $_SESSION['user']['id'];
 
-        if (!Validator::string($body, 1, 1000)) {
-            $errors['body'] = 'A body of no more than 1000 characters,  is required';
-        }
+       $errors = $this->service->createNote($body, $userId);
 
         if (!empty($errors)) {
-
             return view("notes/create.view.php", [
                 'heading' => 'Create Note',
                 'errors' => $errors
@@ -110,7 +103,6 @@ class NotesController
 
         }
 
-        $this->repository->createNote($body, $userId);
 
         header('location: /notes');
         die();
@@ -120,25 +112,18 @@ class NotesController
 
     public function update()
     {
-
-
         $currentUserId = $_SESSION['user']['id'];
 
-        $noteId = $_POST['id'] ?? $_GET['id'];
+        $noteId = $_GET['id'];
 
-        $note = $this->repository->getNote($noteId);
+        $body = $_POST['body'];
 
+        $errors = $this->service->updateNote($noteId, $body,$currentUserId);
 
-        authorize($note['user_id'] === $currentUserId);
+        if (empty($errors)) {
 
-        $errors = [];
+            $note = $this->service->getNote($noteId,$currentUserId);
 
-        if (!Validator::string($_POST['body'] ?? $_GET['body'], 1, 1000)) {
-            $errors['body'] = 'A body of no more than 1000 characters,  is required';
-        }
-
-
-        if (count($errors)) {
 
             return view('notes/edit.view.php', [
                 'heading' => 'Edit Note',
@@ -148,7 +133,6 @@ class NotesController
 
         }
 
-        $this->repository->updateNote($noteId, $_POST['body']);
         header('location: /notes');
         die();
 
