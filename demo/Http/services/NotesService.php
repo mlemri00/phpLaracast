@@ -15,38 +15,34 @@ class NotesService
         $this->repository= new NoteDaoDb();
     }
 
-    public function getAllNotes(){
-    $userId = Auth::getUserIdFromJwt();
+    public function getAllNotes($userId){
+
     $notes = $this->repository->getAllNotes($userId);
 
     return $notes;
 }
 
 
-public function getNote($noteId){
-    $currentUserId = Auth::getUserIdFromJwt();
+public function getNote($noteId, $userId){
     $note = $this->repository->getNote($noteId);
 
-    authorize($note->getUserId() == $currentUserId);
+    authorize($note->getUserId() == $userId);
 
+    return $this->repository->getNote($noteId);
 }
 
-public function deleteNote($noteId){
-    $currentUserId = Auth::getUserIdFromJwt();
+public function deleteNote($noteId, $userId){
 
     $note = $this->repository->getNote($noteId);
 
-    authorize($note->getUserId() === $currentUserId);
+    authorize($note->getUserId() === $userId);
 
     $this->repository->deleteNote($noteId);
 
 }
 
-public function createNote($body){
+public function createNote($body, $userId){
     $errors = [];
-
-    $userId = Auth::getUserIdFromJwt();
-
 
     if (!Validator::string($body, 1, 1000)) {
         $errors['body'] = 'A body of no more than 1000 characters,  is required';
@@ -60,13 +56,12 @@ public function createNote($body){
 
 }
 
-public function updateNote($body,$noteId){
+public function updateNote($body,$noteId,$userId){
 
-    $currentUserId = Auth::getUserIdFromJwt();
 
     $note = $this->repository->getNote($noteId);
 
-    authorize($note['user_id'] === $currentUserId);
+    authorize($note['user_id'] === $userId);
 
     $errors = [];
 
@@ -79,7 +74,7 @@ public function updateNote($body,$noteId){
         return $errors;
     }
 
-    $this->repository->updateNote($noteId, $_POST['body']);
+    $this->repository->updateNote($noteId, $body);
 
 }
 
