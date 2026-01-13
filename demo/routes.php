@@ -8,15 +8,15 @@ $router->get( '/about','about.php');
 $router->get('/notes',"NotesController","index")->only("auth")   ;
 
 
-$router->get('/note',"notes@show")->only("auth");
+$router->get('/note',"NotesController",'show')->only("auth");
 
 
-$router->get('/notes/create','notes@create');
-$router->delete('/note','notes@delete');
+$router->get('/notes/create','NotesController','create');
+$router->delete('/note','NotesController', 'delete');
 
-$router->get('/note/edit','notes@edit');
-$router->patch('/note','notes@update');
-$router->post('/note','notes@store');
+$router->get('/note/edit','NotesController','edit');
+$router->patch('/note','NotesController','update');
+$router->post('/note','NotesController','store');
 
 
 $router->get('/contact','contact.php');
@@ -34,13 +34,11 @@ $router->post('/authenticate','jwtAuth@authenticate');
 $router->delete("/deletetoken","jwtAuth@deleteToken");
 $router->delete("/logout","jwtAuth@deleteAllTokens");
 
-$router->get('/api/v1/notes', 'NotesClient', 'getAll');
-$router->post('/api/v1/notes', 'NotesClient', 'store');
-$router->get('/api/v1/notes/{id}', 'NotesClient', 'getOne');
-$router->patch('/api/v1/notes/{id}', 'NotesClient', 'edit');
-$router->delete('/api/v1/notes/{id}', 'NotesClient', 'destroy');
-$router->post('/api/v1/users/auth', 'UsersClient', 'getToken');
-$router->delete('/api/v1/users/auth', 'UsersClient', 'deleteToken');
+$router->get('/api/notes', 'NotesRestController', 'index');
+$router->post('/api/notes', 'NotesRestController', 'store');
+$router->get('/api/note', 'NotesRestController', 'show');
+$router->patch('/api/note/edit', 'NotesRestController', 'edit');
+$router->delete('/api/note', 'NotesRestController', 'delete');
 
 ////TEST TEST TEST TEST
 
