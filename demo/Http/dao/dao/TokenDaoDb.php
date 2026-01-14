@@ -33,13 +33,13 @@ class TokenDaoDb implements ITokenDao
     }
 
 
-    public  function deleteToken($tokenId)
+    public  function deleteToken($token)
     {
 
         $db=App::resolve(Database::class);
 
-        $db->query('delete from token where id = :id',[
-            'id'=>$tokenId
+        $db->query('delete from token where token = :token',[
+            'token'=>$token
         ]);
 
     }

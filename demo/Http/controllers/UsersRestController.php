@@ -75,9 +75,7 @@ class UsersRestController
         die();
     }
 
-    public function transformToken($daoToken){
 
-    }
 
 
 }

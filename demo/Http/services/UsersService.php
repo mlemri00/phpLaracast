@@ -11,6 +11,7 @@ use Http\dao\dao\UsersDaoDb;
 use Http\dao\factory\TokenDaoFactory;
 use Http\dao\factory\UsersDaoFactory;
 use Http\Forms\LoginForm;
+use Http\models\Token;
 
 class UsersService
 {
@@ -74,6 +75,14 @@ class UsersService
 
 
     }
+
+    public function toToken($daoToken){
+        $token = Jwt::decode($daoToken);
+        return new Token(
+            $token['id'],
+            $daoToken);
+    }
+
 
     public function authorizeUser($userId)
     {

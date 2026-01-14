@@ -4,6 +4,7 @@ namespace Http\services;
 
 use core\Jwt;
 use Http\dao\factory\TokenDaoFactory;
+use Http\models\Token;
 
 class TokenService
 {
@@ -18,24 +19,33 @@ class TokenService
 
     public function generateToken($userId){
         $payload = [
-            'id'=>$$userId
+            'id'=>$userId
         ];
         $token = $this->jwt->encode($payload);
 
         $this->repository->storeToken($token,$userId);
 
-        return $token;
+        return $this->toToken($token);
     }
 
     public function getAllTokens($userId){
     $tokens =  $this->repository->getAllTokens($userId);
-        return $tokens;
-    }
-    public function deleteToken(){
 
+    return array_map([$this,'toToken'],$tokens);
+    }
+    public function toToken($daoToken){
+        $token = Jwt::decode($daoToken);
+        return new Token(
+            $token['id'],
+            $daoToken);
     }
 
-    public function deleteAllTokens(){
+
+    public function deleteToken($token){
+        $this->repository->deleteToken();
+    }
+
+    public function deleteAllTokens($userId){
 
     }
 

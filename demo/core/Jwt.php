@@ -4,12 +4,12 @@ namespace core;
 
 class Jwt
 {
-private $key;
+private static $key="e6624d8b2651358b444af192";
     public function __construct(){
-        $this->key="e6624d8b2651358b444af192";
+
     }
 
-    public function encode(array $payload){
+    public static function encode(array $payload){
 
         $header = json_encode([
             "alg" => "HS256",
@@ -18,18 +18,18 @@ private $key;
             "rand"=>random_int(1,26589)
         ]);
 
-        $header = $this->base64URLEncode($header);
+        $header = static::base64URLEncode($header);
         $payload = json_encode($payload);
-        $payload = $this->base64URLEncode($payload);
+        $payload = static::base64URLEncode($payload);
 
-        $signature = hash_hmac("sha256", $header . "." . $payload, $this->key, true);
-        $signature = $this->base64URLEncode($signature);
+        $signature = hash_hmac("sha256", $header . "." . $payload, static::$key, true);
+        $signature = static::base64URLEncode($signature);
         return $header . "." . $payload . "." . $signature;
     }
 
 
 
-    public function decode(string $token)
+    public static function decode(string $token)
     {
         if (preg_match("/^(?<header>.+)\.(?<payload>.+)\.(?<signature>.+)$/", $token, $matches) !== 1) {
             throw new InvalidArgumentException("invalid token format");
@@ -38,11 +38,11 @@ private $key;
         $signature = hash_hmac(
             "sha256",
             $matches["header"] . "." . $matches["payload"],
-            $this->key,
+            static::$key,
             true
         );
 
-        $signature_from_token = $this->base64URLDecode($matches["signature"]);
+        $signature_from_token = static::base64URLDecode($matches["signature"]);
 
         if (!hash_equals($signature, $signature_from_token)) {
 
@@ -50,19 +50,19 @@ private $key;
             throw new InvalidSignatureException;
         }
 
-        $payload = json_decode($this->base64URLDecode($matches["payload"]), true);
+        $payload = json_decode(static::base64URLDecode($matches["payload"]), true);
 
         return $payload;
     }
 
 
-    private function base64URLEncode(string $text)
+    private static function base64URLEncode(string $text)
     {
 
         return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($text));
     }
         //per encode
-    private function base64URLDecode(string $text)
+    private static function base64URLDecode(string $text)
     {
 
         return base64_decode(
