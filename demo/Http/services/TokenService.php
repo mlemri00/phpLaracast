@@ -27,11 +27,9 @@ class TokenService
         return $token;
     }
 
-    public function storeToken(){
-
-    }
-    public function getAllTokens(){
-
+    public function getAllTokens($userId){
+    $tokens =  $this->repository->getAllTokens($userId);
+        return $tokens;
     }
     public function deleteToken(){
 

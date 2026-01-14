@@ -21,6 +21,14 @@ function authorize($condition,$apiRequest = false,$status=Response::FORBIDDEN){
 
 
 }
+
+function jsonResponse($message, $content){
+    header('Content-Type: application/json');
+    echo json_encode([$message => $content]);
+    die();
+}
+
+
 function abort($apiRest=false,$code = 404){// això és per fer un paràmetre de sèrie si no es passa ni un
     http_response_code($code);
     if ($apiRest){

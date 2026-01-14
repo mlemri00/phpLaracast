@@ -17,8 +17,9 @@ class Validator
 
 
     }
+    public static function validate($email,$password){
 
-
+    }
 
 
 }
