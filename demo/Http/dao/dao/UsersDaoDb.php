@@ -17,6 +17,13 @@ class UsersDaoDb implements IUsersDao
         ])->find();
         return $user;
     }
+    public function findUserById($userId){
+        $db=App::resolve(Database::class);
+        $user= $db->query('select * from users where id = :id',[
+            'id'=>$userId
+        ])->find();
+        return $user;
+    }
 
     public function registerUser($email,$password,$phone = null, $username = null){
         $db=App::resolve(Database::class);

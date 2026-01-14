@@ -6,7 +6,7 @@ interface ITokenDao
 {
     public  function storeToken($token, $userId);
 
-    public  function getAllTokens($userId);
+    public  function getAllTokens();
 
     public  function getLastId();
 

@@ -29,7 +29,7 @@ class UsersService
 
     public function storeUser($email, $password, $phone, $username)
     {
-        $user = $this->findUser($email);
+        $user = $this->findUserByEmail($email);
         if (!empty($user)) {
             jsonResponse("info", "User already exists");
         }
@@ -44,10 +44,15 @@ class UsersService
 
 
     }
-    public function findUser($email)
+    public function findUserByEmail($email)
     {
         $user = $this->userRepository->findUserByEmail($email);
-        return new User();
+        return new User($user['id'],$user['email'],$user['password']);
+    }
+
+    public function findUserById($userId){
+        $user = $this->userRepository->findUserById($userId);
+        return new User($user['id'],$user['email'],$user['password']);
     }
 
 
@@ -74,18 +79,18 @@ class UsersService
     }
 
 
-    public function authorizeUser($userId)
+    public function authorizeUser()
     {
         if (!array_key_exists('Authorization', getallheaders())) {
             jsonResponse("error", "unauthorized");
         }
 
-        $token = str_replace('Bearer ', '', getallheaders()['Authorization']);
-        $tokens = $this->tokenService->getAllTokens($userId);
+        $providedToken = str_replace('Bearer ', '', getallheaders()['Authorization']);
+        $tokens = $this->tokenService->getAllTokens();
 
-        foreach ($tokens as $t) {
-            if ($t->getValue() == $token) {
-                return $this->userService->get($t->getSub())->getId();
+        foreach ($tokens as $token ) {
+            if ($token->getKey() == $providedToken) {
+                return $this->findUserById($token->getUserId());
             }
         }
 

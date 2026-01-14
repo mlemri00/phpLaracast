@@ -7,84 +7,66 @@ use core\Validator;
 use Http\dao\dao\NoteDaoDb;
 use Http\dao\factory\NoteDaoFactory;
 use Http\services\NotesService;
+use Http\services\UsersService;
 
 class NotesRestController
 {
     private NotesService $service;
-
+    private UsersService $userService;
     public function __construct()
     {
         $this->service = new NotesService();
+        $this->userService = new UsersService();
     }
 
     public function index()
     {
-        $currentUserId = Auth::getUserIdFromJwt();
+        $currentUserId = $this->userService->authorizeUser();
 
         $notes = $this->service->getAllNotes($currentUserId);
 
-        header('Content-Type: application/json');
-        echo json_encode(["notes" => $notes]);
-        die();
+        jsonResponse("notes",$notes);
     }
 
     public function show()
     {
-        $currentUserId = Auth::getUserIdFromJwt();
+        $currentUserId = $this->userService->authorizeUser();
         $noteId = $_GET['id'];
+
         $note = $this->service->getNote($noteId, $currentUserId);
 
-        header('Content-Type: application/json');
-        echo json_encode(["note" => $note]);
-        die();
-
+        jsonResponse("note",$note);
     }
 
     public function delete()
     {
-        $currentUserId = Auth::getUserIdFromJwt();
+        $currentUserId = $this->userService->authorizeUser();
         $noteID = $_POST['id'] ?? $_GET['id'];
 
         $this->service->deleteNote($noteID, $currentUserId);
 
-        header('location: /api/notes');
-        die();
-
+        redirect("/api/notes");
     }
 
     public function store()
     {
-        $currentUserId = Auth::getUserIdFromJwt();
+        $currentUserId = $this->userService->authorizeUser();
         $body = $_POST['body'];
 
-        $errors = $this->service->createNote($body, $currentUserId);
-        if (!empty($errors)) {
-            header('Content-Type: application/json');
-            echo json_encode(["message" => $errors]);
-            die();
-        }
+        $this->service->createNote($body, $currentUserId);
 
-        header('location: /api/notes');
-        die();
+        redirect("/api/notes");
     }
 
     public function update()
     {
-        $currentUserId = Auth::getUserIdFromJwt();
-        $noteId = $_POST['id'] ?? $_GET['id'];
-
+        $currentUserId = $this->userService->authorizeUser();
+        $noteId = $_POST['id'];
         $body = $_POST['body'];
 
-        $errors = $this->service->updateNote($body, $noteId, $currentUserId);
+        $this->service->updateNote($body, $noteId, $currentUserId);
 
-        if (empty($errors)) {
-            header('Content-Type: application/json');
-            echo json_encode(["message" => $errors]);
-            die();
-        }
-
-        header('location: /api/notes');
-        die();
+        redirect("/api/notes");
 
     }
 

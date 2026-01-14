@@ -28,8 +28,8 @@ class TokenService
         return $this->toToken($token);
     }
 
-    public function getAllTokens($userId){
-    $tokens =  $this->repository->getAllTokens($userId);
+    public function getAllTokens(){
+    $tokens =  $this->repository->getAllTokens();
 
     return array_map([$this,'toToken'],$tokens);
     }

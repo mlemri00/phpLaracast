@@ -19,11 +19,9 @@ class TokenDaoDb implements ITokenDao
             ]);
     }
 
-    public function getAllTokens($userId){
+    public function getAllTokens(){
         $db=App::resolve(Database::class);
-        $tokens =$db->query("select * from token where user_id = :user_id",[
-            'user_id'=>$userId
-        ])->get();
+        $tokens =$db->query("select * from token")->get();
         return $tokens;
     }
     public  function getLastId(){
