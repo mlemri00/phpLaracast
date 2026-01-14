@@ -12,14 +12,13 @@ use Http\dao\factory\TokenDaoFactory;
 use Http\dao\factory\UsersDaoFactory;
 use Http\Forms\LoginForm;
 use Http\models\Token;
+use Http\models\User;
 
 class UsersService
 {
 
 
     private $userRepository;
-    use Core\HttpResponse;
-
     private $tokenService;
 
     public function __construct()
@@ -30,33 +29,25 @@ class UsersService
 
     public function storeUser($email, $password, $phone, $username)
     {
-        $form = new LoginForm();
-        if ($form->validate($email, $password)) {
-            $user = $this->findUser($email);
-
-            if (!empty($user)) {
-                jsonResponse("info", "User already exists");
-            }
-
-            $this->userRepository->registerUser($email, $password, $phone, $username);
-
-            $userId = $this->userRepository->findUserByEmail($email);
-
-            $token = $this->tokenService->generateToken($userId);
-
-            return $token;
-        } else {
-            jsonResponse("error", $form->validate($email, $password));
-
+        $user = $this->findUser($email);
+        if (!empty($user)) {
+            jsonResponse("info", "User already exists");
         }
+
+        $this->userRepository->registerUser($email, $password, $phone, $username);
+
+        $userId = $this->userRepository->findUserByEmail($email);
+
+        $token = $this->tokenService->generateToken($userId);
+
+        return $token;
 
 
     }
-
     public function findUser($email)
     {
         $user = $this->userRepository->findUserByEmail($email);
-        return $user;
+        return new User();
     }
 
 
@@ -64,19 +55,18 @@ class UsersService
     {
 
         if (!(new Authenticator)->attempt($email, $password, false)) {
-            jsonResponse("error","No account matches that user");
+            jsonResponse("error", "No account matches that user");
         }
-            $id = $this->userRepository->getUserIdByEmail($email);
-            $token = $this->tokenService->generateToken($id);
+        $id = $this->userRepository->getUserIdByEmail($email);
+        $token = $this->tokenService->generateToken($id);
 
-            return $token;
-
-
+        return $token;
 
 
     }
 
-    public function toToken($daoToken){
+    public function toToken($daoToken)
+    {
         $token = Jwt::decode($daoToken);
         return new Token(
             $token['id'],
@@ -87,7 +77,7 @@ class UsersService
     public function authorizeUser($userId)
     {
         if (!array_key_exists('Authorization', getallheaders())) {
-            jsonResponse("error","unauthorized");
+            jsonResponse("error", "unauthorized");
         }
 
         $token = str_replace('Bearer ', '', getallheaders()['Authorization']);
