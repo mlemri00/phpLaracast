@@ -70,7 +70,7 @@ class NotesController
 
         $currentUserId = $_SESSION['user']['id'];
 
-        $noteId = $_GET['id'];
+        $noteId = $_POST['id'];
 
         $this->service->deleteNote($noteId, $currentUserId);
 

@@ -45,14 +45,14 @@ class Router{
     }
 
     public function route($uri,$method){
-        $controllers = 'Http/controllers/';
+        $controllers = 'Http\controllers\\';
 
         foreach ($this->routes as $route){
 
             if ($route['uri']===$uri && $route['method']=== strtoupper($method)){
                 Middleware::resolve($route['middleware']);
                  if (!$route['controllerMethod']){
-                     return require base_path($controllers . $route['controller']);
+                     return require base_path('Http/controllers/' . $route['controller']);
                  }else {
                      return (new ($controllers . $route['controller']))->{$route['controllerMethod']}();
 
