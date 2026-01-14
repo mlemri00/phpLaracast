@@ -29,10 +29,10 @@ $router->post('/sessions','sessions/store.php')->only('guest');
 $router->delete('/sessions','sessions/destroy.php')->only('auth');
 
 
-$router->post('/registerjson','jwtAuth@register');
-$router->post('/authenticate','jwtAuth@authenticate');
-$router->delete("/deletetoken","jwtAuth@deleteToken");
-$router->delete("/logout","jwtAuth@deleteAllTokens");
+$router->post('/api/register','UsersRestController','register');
+$router->post('/api/login','UsersRestController','authenticate');
+$router->delete("/api/token","UsersRestController",'');
+$router->delete("/api/logout","UsersRestController");
 
 $router->get('/api/notes', 'NotesRestController', 'index');
 $router->post('/api/notes', 'NotesRestController', 'store');

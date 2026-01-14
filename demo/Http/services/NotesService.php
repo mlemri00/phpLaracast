@@ -5,6 +5,7 @@ namespace Http\services;
 use core\Middleware\Auth;
 use core\Validator;
 use Http\dao\dao\NoteDaoDb;
+use Http\dao\factory\NoteDaoFactory;
 
 class NotesService
 {
@@ -12,7 +13,7 @@ class NotesService
 
     public function __construct()
     {
-        $this->repository = new NoteDaoDb();
+        $this->repository = NoteDaoFactory::build();
     }
 
     public function getAllNotes($userId)

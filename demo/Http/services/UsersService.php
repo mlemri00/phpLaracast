@@ -30,13 +30,14 @@ class UsersService
     public function storeUser($email, $password, $phone, $username)
     {
         $user = $this->findUserByEmail($email);
-        if (!empty($user)) {
+
+        if ($user->getId()) {
             jsonResponse("info", "User already exists");
         }
 
         $this->userRepository->registerUser($email, $password, $phone, $username);
 
-        $userId = $this->userRepository->findUserByEmail($email);
+        $userId = $this->findUserByEmail($email)->getId();
 
         $token = $this->tokenService->generateToken($userId);
 

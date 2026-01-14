@@ -13,7 +13,7 @@ class TokenService
 
     public function __construct()
     {
-        $this->repository =  new TokenDaoFactory()::build();
+        $this->repository =  TokenDaoFactory::build();
         $this->jwt = new Jwt();
     }
 

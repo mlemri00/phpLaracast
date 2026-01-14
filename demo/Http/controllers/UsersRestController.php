@@ -47,21 +47,7 @@ class UsersRestController
 
     public function deleteToken()
     {
-        $userId = Auth::getUserIdFromJwt();
 
-
-        $tokenId = $_POST['id'] ?? $_GET['id'];
-
-        $token = UsersDaoDb::getToken($tokenId);
-
-        $tokenUserId = $this->jwt->decode($token['token'])['id']['id'];
-        if ($userId != $tokenUserId) {
-            abort(true, 403);
-        }
-        UsersDaoDb::deleteToken($tokenId);
-        header('Content-Type: application/json');
-        echo json_encode(["message" => "Token deleted"]);
-        die();
     }
 
     public function deleteAllTokens()

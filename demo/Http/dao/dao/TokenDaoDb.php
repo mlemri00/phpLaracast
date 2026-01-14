@@ -2,6 +2,7 @@
 
 namespace Http\dao\dao;
 
+use App;
 use core\Database;
 use Http\dao\interfaces\ITokenDao;
 
