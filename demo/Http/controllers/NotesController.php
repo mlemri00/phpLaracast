@@ -115,16 +115,13 @@ class NotesController
     {
         $currentUserId = $_SESSION['user']['id'];
 
-        $noteId = $_GET['id'];
+        $noteId = $_POST['id'];
 
         $body = $_POST['body'];
+        $errors = $this->service->updateNote( $body,$noteId, $currentUserId);
 
-        $errors = $this->service->updateNote($noteId, $body, $currentUserId);
-
-        if (empty($errors)) {
-
+        if (!empty($errors)) {
             $note = $this->service->getNote($noteId, $currentUserId);
-
             return view('notes/edit.view.php', [
                 'heading' => 'Edit Note',
                 'errors' => $errors,
