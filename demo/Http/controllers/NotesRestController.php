@@ -21,8 +21,7 @@ class NotesRestController
 
     public function index()
     {
-        $currentUserId = $this->userService->authorizeUser();
-
+        $currentUserId = $this->userService->authorizeUser()->getId();
         $notes = $this->service->getAllNotes($currentUserId);
 
         jsonResponse("notes",$notes);
@@ -30,7 +29,7 @@ class NotesRestController
 
     public function show()
     {
-        $currentUserId = $this->userService->authorizeUser();
+        $currentUserId = $this->userService->authorizeUser()->getId();
         $noteId = $_GET['id'];
 
         $note = $this->service->getNote($noteId, $currentUserId);
@@ -40,7 +39,7 @@ class NotesRestController
 
     public function delete()
     {
-        $currentUserId = $this->userService->authorizeUser();
+        $currentUserId = $this->userService->authorizeUser()->getId();
         $noteID = $_POST['id'] ?? $_GET['id'];
 
         $this->service->deleteNote($noteID, $currentUserId);
@@ -50,7 +49,7 @@ class NotesRestController
 
     public function store()
     {
-        $currentUserId = $this->userService->authorizeUser();
+        $currentUserId = $this->userService->authorizeUser()->getId();
         $body = $_POST['body'];
 
         $this->service->createNote($body, $currentUserId);
@@ -60,7 +59,7 @@ class NotesRestController
 
     public function update()
     {
-        $currentUserId = $this->userService->authorizeUser();
+        $currentUserId = $this->userService->authorizeUser()->getId();
         $noteId = $_POST['id'];
         $body = $_POST['body'];
 

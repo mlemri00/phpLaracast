@@ -31,7 +31,7 @@ class UsersRestController
 
 
         $token = $this->service->storeUser($email, $password, $phoneNumber, $username);
-        jsonResponse("token", $token);
+        jsonResponse("token", $token->getKey());
 
     }
 
@@ -42,7 +42,7 @@ class UsersRestController
 
         $token = $this->service->authenticateUser($email, $password);
 
-        jsonResponse("token",$token);
+        jsonResponse("token",$token->getKey());
     }
 
     public function deleteToken()

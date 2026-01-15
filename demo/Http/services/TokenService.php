@@ -31,13 +31,17 @@ class TokenService
     public function getAllTokens(){
     $tokens =  $this->repository->getAllTokens();
 
-    return array_map([$this,'toToken'],$tokens);
+    return array_map([$this,'toTokenFromDao'],$tokens);
     }
     public function toToken($daoToken){
         $token = Jwt::decode($daoToken);
         return new Token(
-            $token['id'],
-            $daoToken);
+            $daoToken,$token['id']);
+    }
+    public function toTokenFromDao($daoToken){
+        $token = Jwt::decode($daoToken['token']);
+        return new Token(
+            $daoToken['token'],$token['id']);
     }
 
 
