@@ -31,8 +31,9 @@ $router->delete('/sessions','sessions/destroy.php')->only('auth');
 
 $router->post('/api/register','UsersRestController','register');
 $router->post('/api/login','UsersRestController','authenticate');
-$router->delete("/api/token","UsersRestController",'');
-$router->delete("/api/logout","UsersRestController");
+$router->get("/api/token","UsersRestController",'getAllTokens');
+$router->delete("/api/token","UsersRestController",'deleteToken');
+$router->delete("/api/logout","UsersRestController","deleteAllToken");
 
 $router->get('/api/notes', 'NotesRestController', 'index');
 $router->post('/api/notes', 'NotesRestController', 'store');

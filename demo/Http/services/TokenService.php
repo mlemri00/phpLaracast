@@ -43,14 +43,26 @@ class TokenService
         return new Token(
             $daoToken['token'],$token['id']);
     }
+    public function toTokenString($daoToken){
+        $token = Jwt::decode($daoToken['token']);
+        $tokenModel =   new Token(
+            $daoToken['token'],$token['id']);
+        return $tokenModel->getKey();
+    }
+
+    public function getAllTokensByUserId($userId){
+        $tokens =  $this->repository->getAllTokensByUserId($userId);
+
+        return array_map([$this,'toTokenString'],$tokens);
+    }
 
 
     public function deleteToken($token){
-        $this->repository->deleteToken();
+        $this->repository->deleteToken($token);
     }
 
     public function deleteAllTokens($userId){
-
+        $this->repository->deleteAllTokens($userId);
     }
 
 }
