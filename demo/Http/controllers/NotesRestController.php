@@ -63,7 +63,7 @@ class NotesRestController
         redirect("/api/notes");
     }
 
-    public function edit()
+    public function update()
     {
         $currentUserId = $this->userService->authorizeUser();
 
