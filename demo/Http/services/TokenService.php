@@ -43,12 +43,6 @@ class TokenService
         return new Token(
             $daoToken['token'],$token['id']);
     }
-    public function toTokenString($daoToken){
-        $token = Jwt::decode($daoToken['token']);
-        $tokenModel =   new Token(
-            $daoToken['token'],$token['id']);
-        return $tokenModel->getKey();
-    }
 
     public function getAllTokensByUserId($userId){
         $tokens =  $this->repository->getAllTokensByUserId($userId);
