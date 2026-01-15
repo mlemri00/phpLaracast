@@ -52,8 +52,9 @@ class TokenService
 
     public function getAllTokensByUserId($userId){
         $tokens =  $this->repository->getAllTokensByUserId($userId);
-
-        return array_map([$this,'toTokenString'],$tokens);
+        $modeledTokens = array_map([$this,'toTokenFromDao'],$tokens);
+        $modeledString = array_map('strval',$modeledTokens);
+        return  $modeledString;
     }
 
 

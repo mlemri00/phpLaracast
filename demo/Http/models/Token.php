@@ -22,4 +22,11 @@ class Token
         return $this->userId;
     }
 
+    public function __toString(): string
+    {
+
+        return "Token : ".$this->getKey();
+
+    }
+
 }
