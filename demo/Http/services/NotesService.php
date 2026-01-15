@@ -62,7 +62,7 @@ class NotesService
 
         $note = $this->repository->getNote($noteId);
 
-        authorize($note['user_id'] === $userId);
+        authorize($note->getUserId() === $userId);
 
 
         if (!Validator::string($body, 1, 1000)) {

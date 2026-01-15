@@ -21,7 +21,8 @@ class NotesRestController
 
     public function index()
     {
-        $currentUserId = $this->userService->authorizeUser()->getId();
+        $currentUserId = $this->userService->authorizeUser();
+
         $notes = $this->service->getAllNotes($currentUserId);
 
         jsonResponse("notes",$notes);
@@ -29,7 +30,7 @@ class NotesRestController
 
     public function show()
     {
-        $currentUserId = $this->userService->authorizeUser()->getId();
+        $currentUserId = $this->userService->authorizeUser();
         $noteId = $_GET['id'];
 
         $note = $this->service->getNote($noteId, $currentUserId);
@@ -39,31 +40,35 @@ class NotesRestController
 
     public function delete()
     {
-        $currentUserId = $this->userService->authorizeUser()->getId();
-        $noteID = $_POST['id'] ?? $_GET['id'];
+        $currentUserId = $this->userService->authorizeUser();
+        $requestBody = json_decode(file_get_contents('php://input'));
 
-        $this->service->deleteNote($noteID, $currentUserId);
+
+        $this->service->deleteNote($requestBody->noteId, $currentUserId);
 
         redirect("/api/notes");
     }
 
     public function store()
     {
-        $currentUserId = $this->userService->authorizeUser()->getId();
-        $body = $_POST['body'];
+        $currentUserId = $this->userService->authorizeUser();
+        $requestBody = json_decode(file_get_contents('php://input'));
 
-        $this->service->createNote($body, $currentUserId);
+
+        $this->service->createNote($requestBody->body, $currentUserId);
 
         redirect("/api/notes");
     }
 
-    public function update()
+    public function edit()
     {
-        $currentUserId = $this->userService->authorizeUser()->getId();
-        $noteId = $_POST['id'];
-        $body = $_POST['body'];
+        $currentUserId = $this->userService->authorizeUser();
 
-        $this->service->updateNote($body, $noteId, $currentUserId);
+        $requestBody = json_decode(file_get_contents('php://input'));
+
+
+
+        $this->service->updateNote($requestBody->body, $requestBody->noteId, $currentUserId);
 
         redirect("/api/notes");
 

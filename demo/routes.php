@@ -37,7 +37,7 @@ $router->delete("/api/logout","UsersRestController");
 $router->get('/api/notes', 'NotesRestController', 'index');
 $router->post('/api/notes', 'NotesRestController', 'store');
 $router->get('/api/note', 'NotesRestController', 'show');
-$router->patch('/api/note/edit', 'NotesRestController', 'edit');
+$router->patch('/api/note', 'NotesRestController', 'edit');
 $router->delete('/api/note', 'NotesRestController', 'delete');
 
 

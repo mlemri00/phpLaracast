@@ -31,14 +31,14 @@ class NoteDaoDb implements INoteDao
 
     }
 
-    public function getNote($noteId,$apiRequest=false)
+    public function getNote($noteId)
     {
         $db=App::resolve(Database::class);
 
 
         $noteDao = $db->query('select * from notes where id = :id', [
             'id' => $noteId
-        ])->findOrFail($apiRequest);
+        ])->find();
 
         return new Note($noteDao['id'],$noteDao['body'],$noteDao['user_id']);
     }

@@ -91,11 +91,10 @@ class UsersService
 
         foreach ($tokens as $token ) {
             if ($token->getKey() == $providedToken) {
-                return $this->findUserById($token->getUserId());
+                return $this->findUserById($token->getUserId())->getId();
             }
         }
-
-        abort(false, 404);
+        jsonResponse("message","Invalid token");
     }
 
 }
