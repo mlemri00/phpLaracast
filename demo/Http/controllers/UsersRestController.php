@@ -2,14 +2,7 @@
 
 namespace Http\controllers;
 
-use App;
-use core\Authenticator;
-use core\Database;
-use core\Jwt;
-use core\Middleware\Auth;
-use core\Validator;
-use Http\dao\dao\UsersDaoDb;
-use Http\Forms\LoginForm;
+
 use Http\services\TokenService;
 use Http\services\UsersService;
 
