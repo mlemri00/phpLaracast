@@ -11,12 +11,12 @@ $router->get('/notes',"NotesController","index")->only("auth")   ;
 $router->get('/note',"NotesController",'show')->only("auth");
 
 
-$router->get('/notes/create','NotesController','create');
-$router->delete('/note','NotesController', 'delete');
+$router->get('/notes/create','NotesController','create')->only("auth");
+$router->delete('/note','NotesController', 'delete')->only("auth");
 
-$router->get('/note/edit','NotesController','edit');
-$router->patch('/note','NotesController','update');
-$router->post('/note','NotesController','store');
+$router->get('/note/edit','NotesController','edit')->only("auth");
+$router->patch('/note','NotesController','update')->only("auth");
+$router->post('/note','NotesController','store')->only("auth");
 
 
 $router->get('/contact','contact.php');
