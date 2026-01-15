@@ -55,8 +55,11 @@ class NotesRestController
         $requestBody = json_decode(file_get_contents('php://input'));
 
 
-        $this->service->createNote($requestBody->body, $currentUserId);
+        $errors = $this->service->createNote($requestBody->body, $currentUserId);
 
+        if (!empty($errors)){
+            jsonResponse("error",$errors);
+        }
         redirect("/api/notes");
     }
 
@@ -68,7 +71,11 @@ class NotesRestController
 
 
 
-        $this->service->updateNote($requestBody->body, $requestBody->noteId, $currentUserId);
+        $errors = $this->service->updateNote($requestBody->body, $requestBody->noteId, $currentUserId);
+
+        if (!empty($errors)){
+            jsonResponse("error",$errors);
+        }
 
         redirect("/api/notes");
 

@@ -49,7 +49,7 @@ class NotesService
     {
 
         if (!Validator::string($body, 1, 1000)) {
-            jsonResponse("body",'A body of no more than 1000 characters,  is required');
+            return 'A body of no more than 1000 characters,  is required';
         }
 
         $this->repository->createNote($body, $userId);
@@ -66,7 +66,7 @@ class NotesService
 
 
         if (!Validator::string($body, 1, 1000)) {
-            jsonResponse('body','A body of no more than 1000 characters,  is required');
+           return'A body of no more than 1000 characters,  is required';
         }
 
 
