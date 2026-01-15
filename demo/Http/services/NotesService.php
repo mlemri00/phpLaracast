@@ -72,7 +72,6 @@ class NotesService
         authorize($note->getUserId() === $userId);
 
 
-
         $this->repository->updateNote($noteId, $body);
 
     }

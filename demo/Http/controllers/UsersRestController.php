@@ -11,6 +11,7 @@ class UsersRestController
 
     private $service;
     private $tokenService;
+
     public function __construct()
     {
         $this->service = new UsersService();
@@ -37,7 +38,7 @@ class UsersRestController
 
         $token = $this->service->authenticateUser($email, $password);
 
-        jsonResponse("token",$token->getKey());
+        jsonResponse("token", $token->getKey());
     }
 
     public function deleteToken()
@@ -46,12 +47,14 @@ class UsersRestController
 
         redirect("/api/token");
     }
-    public function getAllTokens(){
+
+    public function getAllTokens()
+    {
 
         $userId = $this->service->authorizeUser();
         $tokens = $this->tokenService->getAllTokensByUserId($userId);
 
-        jsonResponse("tokens",$tokens);
+        jsonResponse("tokens", $tokens);
 
     }
 
@@ -60,13 +63,13 @@ class UsersRestController
     {
         $userId = $this->service->authorizeUser();
         $this->tokenService->deleteAllTokens($userId);
-        jsonResponse("message","All tokens we're deleted");
+        jsonResponse("message", "All tokens we're deleted");
     }
-    public function requestToken(){
+
+    public function requestToken()
+    {
         return str_replace('Bearer ', '', getallheaders()['Authorization']);
     }
-
-
 
 
 }

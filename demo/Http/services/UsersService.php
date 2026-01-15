@@ -45,15 +45,17 @@ class UsersService
 
 
     }
+
     public function findUserByEmail($email)
     {
         $user = $this->userRepository->findUserByEmail($email);
-        return new User($user['id'],$user['email'],$user['password']);
+        return new User($user['id'], $user['email'], $user['password']);
     }
 
-    public function findUserById($userId){
+    public function findUserById($userId)
+    {
         $user = $this->userRepository->findUserById($userId);
-        return new User($user['id'],$user['email'],$user['password']);
+        return new User($user['id'], $user['email'], $user['password']);
     }
 
 
@@ -89,15 +91,13 @@ class UsersService
         $providedToken = str_replace('Bearer ', '', getallheaders()['Authorization']);
         $tokens = $this->tokenService->getAllTokens();
 
-        foreach ($tokens as $token ) {
+        foreach ($tokens as $token) {
             if ($token->getKey() == $providedToken) {
                 return $this->findUserById($token->getUserId())->getId();
             }
         }
-        jsonResponse("message","Invalid token");
+        jsonResponse("message", "Invalid token");
     }
-
-
 
 
 }

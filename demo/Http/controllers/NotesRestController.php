@@ -11,11 +11,12 @@ use Http\services\UsersService;
 
 class NotesRestController
 {
-    private NotesService $service;
+    private NotesService $noteService;
     private UsersService $userService;
+
     public function __construct()
     {
-        $this->service = new NotesService();
+        $this->noteService = new NotesService();
         $this->userService = new UsersService();
     }
 
@@ -23,9 +24,9 @@ class NotesRestController
     {
         $currentUserId = $this->userService->authorizeUser();
 
-        $notes = $this->service->getAllNotes($currentUserId);
+        $notes = $this->noteService->getAllNotes($currentUserId);
 
-        jsonResponse("notes",$notes);
+        jsonResponse("notes", $notes);
     }
 
     public function show()
@@ -33,9 +34,9 @@ class NotesRestController
         $currentUserId = $this->userService->authorizeUser();
         $noteId = $_GET['id'];
 
-        $note = $this->service->getNote($noteId, $currentUserId);
+        $note = $this->noteService->getNote($noteId, $currentUserId);
 
-        jsonResponse("note",$note);
+        jsonResponse("note", $note);
     }
 
     public function delete()
@@ -44,7 +45,7 @@ class NotesRestController
         $requestBody = json_decode(file_get_contents('php://input'));
 
 
-        $this->service->deleteNote($requestBody->noteId, $currentUserId);
+        $this->noteService->deleteNote($requestBody->noteId, $currentUserId);
 
         redirect("/api/notes");
     }
@@ -55,10 +56,10 @@ class NotesRestController
         $requestBody = json_decode(file_get_contents('php://input'));
 
 
-        $errors = $this->service->createNote($requestBody->body, $currentUserId);
+        $errors = $this->noteService->createNote($requestBody->body, $currentUserId);
 
-        if (!empty($errors)){
-            jsonResponse("error",$errors);
+        if (!empty($errors)) {
+            jsonResponse("error", $errors);
         }
         redirect("/api/notes");
     }
@@ -70,11 +71,10 @@ class NotesRestController
         $requestBody = json_decode(file_get_contents('php://input'));
 
 
+        $errors = $this->noteService->updateNote($requestBody->body, $requestBody->noteId, $currentUserId);
 
-        $errors = $this->service->updateNote($requestBody->body, $requestBody->noteId, $currentUserId);
-
-        if (!empty($errors)){
-            jsonResponse("error",$errors);
+        if (!empty($errors)) {
+            jsonResponse("error", $errors);
         }
 
         redirect("/api/notes");

@@ -118,7 +118,7 @@ class NotesController
         $noteId = $_POST['id'];
 
         $body = $_POST['body'];
-        $errors = $this->service->updateNote( $body,$noteId, $currentUserId);
+        $errors = $this->service->updateNote($body, $noteId, $currentUserId);
 
         if (!empty($errors)) {
             $note = $this->service->getNote($noteId, $currentUserId);
