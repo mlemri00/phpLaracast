@@ -36,7 +36,9 @@ class Database{
     }
 
 
-    public function find(){return $this->statement->fetch();
+    public function find(){
+
+        return $this->statement->fetch();
     }
 
     public function findOrFail($apiRequest=false){

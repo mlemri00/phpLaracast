@@ -16,19 +16,19 @@ public function __construct($id,$body,$user_id)
     $this->id=$id;
 
 }
-    public function getBody() :string
+    public function getBody()
     {
         return $this->body;
     }
 
 
-    public function getId() : int
+    public function getId()
     {
         return $this->id;
     }
 
 
-    public function getUserId() : int
+    public function getUserId()
     {
         return $this->user_id;
     }

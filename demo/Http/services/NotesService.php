@@ -59,15 +59,18 @@ class NotesService
     public function updateNote($body, $noteId, $userId)
     {
 
+        if (!Validator::string($body, 1, 1000)) {
+            return 'A body of no more than 1000 characters,  is required';
+        }
 
         $note = $this->repository->getNote($noteId);
 
+        if ($note->getId() == null) {
+            return 'Note not found';
+        }
+
         authorize($note->getUserId() === $userId);
 
-
-        if (!Validator::string($body, 1, 1000)) {
-           return'A body of no more than 1000 characters,  is required';
-        }
 
 
         $this->repository->updateNote($noteId, $body);

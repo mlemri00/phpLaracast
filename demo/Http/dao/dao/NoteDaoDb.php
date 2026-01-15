@@ -39,7 +39,6 @@ class NoteDaoDb implements INoteDao
         $noteDao = $db->query('select * from notes where id = :id', [
             'id' => $noteId
         ])->find();
-
         return new Note($noteDao['id'],$noteDao['body'],$noteDao['user_id']);
     }
 

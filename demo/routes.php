@@ -33,12 +33,12 @@ $router->post('/api/register','UsersRestController','register');
 $router->post('/api/login','UsersRestController','authenticate');
 $router->get("/api/token","UsersRestController",'getAllTokens');
 $router->delete("/api/token","UsersRestController",'deleteToken');
-$router->delete("/api/logout","UsersRestController","deleteAllToken");
+$router->delete("/api/logout","UsersRestController","deleteAllTokens");
 
 $router->get('/api/notes', 'NotesRestController', 'index');
 $router->post('/api/notes', 'NotesRestController', 'store');
-$router->get('/api/note', 'NotesRestController', 'show');
-$router->patch('/api/note', 'NotesRestController', 'edit');
-$router->delete('/api/note', 'NotesRestController', 'delete');
+$router->get('/api/notes', 'NotesRestController', 'show');
+$router->patch('/api/notes', 'NotesRestController', 'edit');
+$router->delete('/api/notes', 'NotesRestController', 'delete');
 
 
